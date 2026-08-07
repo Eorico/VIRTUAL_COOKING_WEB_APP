@@ -6,6 +6,7 @@ import CabinetView   from '../components/Cabinetview'
 import PrepView      from '../components/Prepview'
 import SinkView      from '../components/Sinkview'
 import StoveView     from '../components/Stoveview'
+import RecipeCard    from './RecipeCard'
 import InventoryPanel from '../components/ui/InventoryPanel'
 import useGameStore  from '../store/gameStore'
 import { toolCategories } from '../data/tools'
@@ -27,17 +28,21 @@ const STEPS: { key: KitchenStep; label: string }[] = [
 export default function EducationalKitchen({ onBack, onFinish }: Props) {
   const [active, setActive]    = useState<Station>(null)
   const [kitchenStep, setStep] = useState<KitchenStep>('ingredients')
+  const [showRecipeModal, setShowRecipeModal] = useState(false)
 
   const {
-    selectedRecipe, initializeIngredients,
+    selectedRecipe, initializeIngredients, requiredIngredients,
     collectedIngredients, washedIngredients, slicedIngredients, measuredIngredients,
     currentFeedback, clearFeedback, selectedKnifeId, inventoryToolIds,
     sliceIngredient, measureIngredient, isChallengeMode,
   } = useGameStore()
 
   useEffect(() => {
-    if (selectedRecipe) { initializeIngredients(selectedRecipe); setStep('ingredients') }
-  }, [selectedRecipe])
+    if (selectedRecipe && requiredIngredients.length === 0) {
+      initializeIngredients(selectedRecipe);
+      setStep('ingredients')
+    }
+  }, [selectedRecipe, requiredIngredients.length])
 
   useEffect(() => {
     if (!currentFeedback) return
@@ -100,7 +105,9 @@ export default function EducationalKitchen({ onBack, onFinish }: Props) {
           <ChevronLeft size={20} strokeWidth={2.5} /><span>Back</span>
         </button>
         <div className="ek-nav-title">{selectedRecipe?.name ?? 'Kitchen'}</div>
-        <div style={{ width: 80 }} />
+        <button className="g-btn g-btn--gold" style={{ padding: '6px 14px', fontSize: 13, marginRight: 16, minWidth: 80 }} onClick={() => setShowRecipeModal(true)}>
+          Recipe
+        </button>
       </div>
 
       {/* Step strip — hidden in challenge mode */}
@@ -191,6 +198,14 @@ export default function EducationalKitchen({ onBack, onFinish }: Props) {
           </motion.div>
         )}
       </AnimatePresence>
+
+      {showRecipeModal && selectedRecipe && (
+        <div className="cab-detail-overlay" onClick={() => setShowRecipeModal(false)} style={{ zIndex: 100 }}>
+          <div className="cab-detail-panel" onClick={e => e.stopPropagation()} style={{ width: '90%', maxWidth: 700, maxHeight: '90vh', overflowY: 'auto', padding: 0, borderRadius: 24 }}>
+            <RecipeCard setScreen={() => {}} isPopup={true} onClose={() => setShowRecipeModal(false)} />
+          </div>
+        </div>
+      )}
     </div>
   )
 }
