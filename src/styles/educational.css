@@ -3773,8 +3773,26 @@
   left: 55%;
   top: 43%;
   transform: translate(-50%, -50%);
-  width: 210px;
+  width: 210px; /* Default size for all pots/pans */
 }
+
+/* Individual Cookware Sizes — Adjust these to change their sizes when placed on the stove */
+.gst-pot--pot { width: 210px; left: 55%; top: 43%; }
+.gst-pot--saucepot { width: 190px; left: 56%; top: 48%; }
+.gst-pot--pastapot { width: 230px; left: 55%; top: 42%; }
+.gst-pot--brazier { width: 240px; left: 54.5%; top: 55%; }
+.gst-pot--fryer { width: 210px; left: 55.45%; top: 43%; }
+.gst-pot--maincpot { width: 210px; left: 55.3%; top: 48%; }
+
+.gst-pot--frypan { width: 320px; left: 53%; top: 51.8%; }
+.gst-pot--pan { width: 210px; left: 55%; top: 43%; } /* Fallback pan ID */
+.gst-pot--wok { width: 260px; left: 55%; top: 54%; }
+.gst-pot--saute { width: 300px; left: 53.5%; top: 51.5%; }
+.gst-pot--castiron { width: 300px; left: 53.7%; top: 52%; }
+.gst-pot--paella { width: 260px; left: 54%; top: 54%; }
+.gst-pot--roasting { width: 280px; left: 53%; top: 53%; }
+.gst-pot--saucepan { width: 300px; left: 55%; top: 53%; }
+
 
 .gst-pot-img {
   width: 100%;
@@ -5114,8 +5132,8 @@
   -webkit-backdrop-filter: blur(12px);
 }
 
-.sop-tip-banner--prep { top: 100px; }
-.sop-tip-banner--stove { top: 56px; }
+.sop-tip-banner--prep { top: 890px; }
+.sop-tip-banner--stove { top: 80px; }
 
 .sop-tip-icon {
   font-size: 16px;
@@ -5283,8 +5301,8 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  left: 68%;
-  top: 70%;
+  left: 60%;
+  top: 65%;
   transform: translate(-50%, -50%);
   pointer-events: none;
 }

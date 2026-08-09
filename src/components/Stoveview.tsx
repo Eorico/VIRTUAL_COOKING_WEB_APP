@@ -5,7 +5,7 @@
  */
 import { useState, useEffect, useRef, useCallback } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { ChevronLeft, Flame, CheckCircle2, Target } from 'lucide-react'
+import { ChevronLeft, Flame, CheckCircle2, Target, AlertTriangle } from 'lucide-react'
 import useGameStore from '../store/gameStore'
 import { toolCategories } from '../data/tools'
 import { getSlicesForIngredient } from '../data/sliceimages'
@@ -37,7 +37,7 @@ type CookState = 'idle' | 'cooking' | 'done' | 'burnt'
 
 export default function StoveView({ onClose, onFinishCooking, selectedRecipe }: Props) {
   const {
-    collectedIngredients, slicedIngredients,
+    collectedIngredients, slicedIngredients, measuredIngredients,
     heatLevel, setHeatLevel, setBurnedFood, setCookingElapsedTime,
     startCooking, stopCooking, inventoryToolIds,
     setCookwareMatch, setFlameCentering, setIngredientDropScore,
@@ -66,6 +66,7 @@ export default function StoveView({ onClose, onFinishCooking, selectedRecipe }: 
   const [state, setState]       = useState<CookState>('idle')
   const [notice, setNotice]     = useState('')
   const [sopTip, setSopTip]     = useState('')
+  const [warn, setWarn]         = useState('')
 
   // SOP 1: Cookware alignment feedback
   const [cookwareAligned, setCookwareAligned] = useState<boolean | null>(null)
@@ -129,7 +130,7 @@ export default function StoveView({ onClose, onFinishCooking, selectedRecipe }: 
   const dropIn = (name: string) => {
     if (state === 'done' || state === 'burnt') return
     // SOP 4 & code review fix: block drops while cooking
-    if (state === 'cooking') {
+    if (fireOn) {
       flash('Turn off the fire before adding more ingredients! 🔥')
       return
     }
@@ -139,6 +140,25 @@ export default function StoveView({ onClose, onFinishCooking, selectedRecipe }: 
     if (inPot.includes(name)) { flash(`${ing.name} is already in the ${cookware.name}!`); return }
     if (getSlicesForIngredient(name) && !slicedIngredients.includes(name)) {
       flash(`✂ Slice the ${ing.name} at the Prep Table first!`); return
+    }
+    if (selectedRecipe && selectedRecipe.level <= 2 && !measuredIngredients.includes(name)) {
+      setWarn(`Measure the ${ing.name} at the Prep Table first!`)
+      setTimeout(() => setWarn(''), 1800)
+      return
+    }
+
+    // SOP: Enforce strict chronological drop order for Levels 1 and 2
+    if (selectedRecipe && selectedRecipe.level <= 2 && selectedRecipe.chronologicalIngredients) {
+      const expectedList = selectedRecipe.chronologicalIngredients;
+      const validDropsCount = inPot.filter(item => expectedList.includes(item)).length;
+      
+      if (validDropsCount < expectedList.length) {
+        const expectedNext = expectedList[validDropsCount];
+        if (name !== expectedNext) {
+          flash(`⚠ SOP: Ingredients must be added in chronological order! Expected: ${expectedNext}`);
+          return;
+        }
+      }
     }
 
     // SOP 4: Check drop speed
@@ -253,6 +273,15 @@ export default function StoveView({ onClose, onFinishCooking, selectedRecipe }: 
         )}
       </AnimatePresence>
 
+      <AnimatePresence>
+        {warn && (
+          <motion.div className="prep-unsafe-banner" style={{ position: 'absolute', top: 130, left: 20, right: 20, zIndex: 40 }}
+            initial={{ opacity: 0, y: -16 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}>
+            <AlertTriangle size={18} strokeWidth={2.5} /> {warn}
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       {/* SOP 1: Cookware alignment badge */}
       {cookware && cookwareAligned !== null && (
         <motion.div className={`sop-alignment-badge ${cookwareAligned ? 'aligned' : 'misaligned'}`}
@@ -285,13 +314,7 @@ export default function StoveView({ onClose, onFinishCooking, selectedRecipe }: 
 
       {/* Burner zone: fire + cookware + contents */}
       <div className="gst-burner-zone">
-        {/* SOP 1: Burner size ring indicator */}
-        {!cookware && selectedRecipe && RECIPE_COOKWARE[selectedRecipe.id] && (
-          <motion.div className={`sop-burner-ring sop-burner-ring--${RECIPE_COOKWARE[selectedRecipe.id].burnerSize}`}
-            initial={{ opacity: 0 }} animate={{ opacity: 0.5 }}>
-            <span>{RECIPE_COOKWARE[selectedRecipe.id].burnerSize} burner</span>
-          </motion.div>
-        )}
+        {/* SOP 1: Burner ring indicator has been removed */}
 
         <AnimatePresence>
           {fireOn && state !== 'burnt' && (
@@ -310,7 +333,7 @@ export default function StoveView({ onClose, onFinishCooking, selectedRecipe }: 
 
         <AnimatePresence>
           {cookware && (
-            <motion.div key={cookware.id} className={`gst-pot gst-pot--${state}`}
+            <motion.div key={cookware.id} className={`gst-pot gst-pot--${state} gst-pot--${cookware.id}`}
               initial={{ y: -60, opacity: 0, scale: 0.7 }}
               animate={{ y: 0, opacity: 1, scale: 1 }}
               exit={{ y: -40, opacity: 0 }}
@@ -400,17 +423,15 @@ export default function StoveView({ onClose, onFinishCooking, selectedRecipe }: 
             <motion.button className={`gst-knob ${fireOn ? 'on' : ''}`}
               onClick={toggleFire} whileTap={{ scale: 0.88 }} disabled={inPot.length === 0}>
               <Flame size={22} strokeWidth={2} />
-              <span>{fireOn ? 'Fire ON' : inPot.length === 0 ? 'Add food first' : 'Ignite'}</span>
+              <span>{fireOn ? 'Fire OFF' : inPot.length === 0 ? 'Add food first' : 'Ignite'}</span>
             </motion.button>
 
-            {fireOn && (
-              <div className="gst-heat-mini">
-                {(['low', 'medium', 'high'] as HeatLevel[]).map(h => (
-                  <button key={h} className={`gst-heat-chip ${heatLevel === h ? 'active' : ''}`}
-                    onClick={() => setHeatLevel(h)}>{h}</button>
-                ))}
-              </div>
-            )}
+            <div className="gst-heat-mini">
+              {(['low', 'medium', 'high'] as HeatLevel[]).map(h => (
+                <button key={h} className={`gst-heat-chip ${heatLevel === h ? 'active' : ''}`}
+                  onClick={() => setHeatLevel(h)}>{h}</button>
+              ))}
+            </div>
 
             {state === 'done' && (
               <motion.button className="g-btn g-btn--gold" style={{ padding: '12px 26px', fontSize: 16 }}

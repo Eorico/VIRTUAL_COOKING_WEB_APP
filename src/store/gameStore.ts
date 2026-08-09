@@ -500,10 +500,10 @@ const useGameStore = create<GameStore>()(
             title: 'Cookware & Stove Alignment',
             status: s.cookwareMatchScore >= 80 ? 'pass' : s.cookwareMatchScore >= 50 ? 'warn' : 'fail',
             feedback: s.cookwareMatchScore >= 80
-              ? 'Cookware properly matched to burner size'
+              ? 'Correct cookware selected for the recipe'
               : s.cookwareMatchScore >= 50
-                ? 'Cookware size could be better matched to the burner'
-                : 'Cookware was not matched to the burner size',
+                ? 'Cookware could be better suited for the recipe'
+                : 'Incorrect cookware selected',
           },
           {
             sopId: 'sop2-knife-safety',
@@ -602,7 +602,7 @@ const useGameStore = create<GameStore>()(
               if (!newUnlocked.includes(next.id)) newUnlocked.push(next.id)
             } else {
               // Category done — unlock next category or next level
-              const allCats = [...new Set(recipes.filter((r) => r.level === recipe.level).map((r) => r.category))].sort()
+              const allCats = [...new Set(recipes.filter((r) => r.level === recipe.level).map((r) => r.category))]
               const catIdx = allCats.indexOf(recipe.category)
               if (catIdx === allCats.length - 1) {
                 const nextLevelRecipes = recipes.filter((r) => r.level === recipe.level + 1).sort((a, b) => a.id - b.id)
