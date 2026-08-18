@@ -54,9 +54,11 @@ export default function StoveView({ onClose, onFinishCooking, selectedRecipe }: 
   const invPots  = inventoryToolIds
     .map(id => allTools.find(t => t.id === id && (t.category === 'pot' || t.category === 'pan')))
     .filter(Boolean)
-  const cookwareOptions = invPots.length
+  
+  const isLevel1Or2 = selectedRecipe && selectedRecipe.level <= 2;
+  const cookwareOptions = isLevel1Or2
     ? invPots.map(t => ({ id: t!.id, name: t!.name, img: t!.image, type: t!.category as 'pot' | 'pan' | 'wok' }))
-    : FALLBACK_POTS
+    : (invPots.length ? invPots.map(t => ({ id: t!.id, name: t!.name, img: t!.image, type: t!.category as 'pot' | 'pan' | 'wok' })) : FALLBACK_POTS)
 
   const [cookware, setCookware] = useState<typeof cookwareOptions[0] | null>(null)
   const [inPot, setInPot]       = useState<string[]>([])
@@ -67,6 +69,12 @@ export default function StoveView({ onClose, onFinishCooking, selectedRecipe }: 
   const [notice, setNotice]     = useState('')
   const [sopTip, setSopTip]     = useState('')
   const [warn, setWarn]         = useState('')
+  const [activeTab, setActiveTab] = useState<'cookware' | 'utensils'>('cookware')
+
+  const invUtensils = inventoryToolIds
+    .map(id => allTools.find(t => t.id === id && t.category === 'utensil' && t.id !== 'cboard'))
+    .filter(Boolean)
+
 
   // SOP 1: Cookware alignment feedback
   const [cookwareAligned, setCookwareAligned] = useState<boolean | null>(null)
@@ -129,11 +137,6 @@ export default function StoveView({ onClose, onFinishCooking, selectedRecipe }: 
   // SOP 4: Careful ingredient dropping
   const dropIn = (name: string) => {
     if (state === 'done' || state === 'burnt') return
-    // SOP 4 & code review fix: block drops while cooking
-    if (fireOn) {
-      flash('Turn off the fire before adding more ingredients! 🔥')
-      return
-    }
     const ing = collectedIngredients.find(i => i.name === name)
     if (!ing) return
     if (!cookware) { flash('Pick a cookware first! 🍳'); return }
@@ -171,7 +174,7 @@ export default function StoveView({ onClose, onFinishCooking, selectedRecipe }: 
     recordLastDropTimestamp(now)
 
     if (hopTimer.current) clearTimeout(hopTimer.current)
-    const isSeasoning = ['salt', 'pepper', 'peppercorns'].includes(name.toLowerCase())
+    const isSeasoning = ['salt', 'pepper', 'peppercorns', 'sinigang mix'].includes(name.toLowerCase())
     setHopping({ img: ing.image, key: Date.now(), type: isSeasoning ? 'shake' : 'hop' })
     hopTimer.current = setTimeout(() => {
       setHopping(null)
@@ -342,7 +345,7 @@ export default function StoveView({ onClose, onFinishCooking, selectedRecipe }: 
                 onError={e => { (e.target as HTMLImageElement).style.display = 'none' }} />
 
               <div className="gst-pot-contents">
-                {inPot.filter(n => !['salt', 'pepper', 'peppercorns'].includes(n.toLowerCase())).slice(0, 5).map((name, i) => {
+                {inPot.filter(n => !['salt', 'pepper', 'peppercorns', 'sinigang mix'].includes(n.toLowerCase())).slice(0, 5).map((name, i) => {
                   const ing = collectedIngredients.find(x => x.name === name)
                   return ing ? (
                     <motion.img key={name} src={ing.image}
@@ -405,44 +408,65 @@ export default function StoveView({ onClose, onFinishCooking, selectedRecipe }: 
 
       {/* Controls */}
       <div className="gst-controls">
-        {!cookware ? (
-          <div className="gst-pick-row">
-            <span className="gst-pick-label">Pick cookware{selectedRecipe && RECIPE_COOKWARE[selectedRecipe.id]
-              ? ` (recommended: ${RECIPE_COOKWARE[selectedRecipe.id].cookware})` : ''}:</span>
-            {cookwareOptions.map(c => (
-              <motion.button key={c.id} className="gst-pick-btn"
-                onClick={() => selectCookware(c)} whileTap={{ scale: 0.9 }}>
-                <img src={c.img} alt={c.name}
-                  onError={e => { (e.target as HTMLImageElement).style.display = 'none' }} />
-                <span>{c.name}</span>
-              </motion.button>
-            ))}
-          </div>
-        ) : (
-          <div className="gst-cook-row">
-            <motion.button className={`gst-knob ${fireOn ? 'on' : ''}`}
-              onClick={toggleFire} whileTap={{ scale: 0.88 }} disabled={inPot.length === 0}>
-              <Flame size={22} strokeWidth={2} />
-              <span>{fireOn ? 'Fire OFF' : inPot.length === 0 ? 'Add food first' : 'Ignite'}</span>
-            </motion.button>
+        <div className="gst-tabs">
+          <button className={`gst-tab-btn ${activeTab === 'cookware' ? 'active' : ''}`} onClick={() => setActiveTab('cookware')}>Cookware</button>
+          <button className={`gst-tab-btn ${activeTab === 'utensils' ? 'active' : ''}`} onClick={() => setActiveTab('utensils')}>Utensils</button>
+        </div>
 
-            <div className="gst-heat-mini">
-              {(['low', 'medium', 'high'] as HeatLevel[]).map(h => (
-                <button key={h} className={`gst-heat-chip ${heatLevel === h ? 'active' : ''}`}
-                  onClick={() => setHeatLevel(h)}>{h}</button>
-              ))}
+        {activeTab === 'cookware' && (
+          !cookware ? (
+            <div className="gst-pick-row">
+              <span className="gst-pick-label">Pick cookware{selectedRecipe && RECIPE_COOKWARE[selectedRecipe.id]
+                ? ` (recommended: ${RECIPE_COOKWARE[selectedRecipe.id].cookware})` : ''}:</span>
+              {cookwareOptions.length > 0 ? cookwareOptions.map(c => (
+                <motion.button key={c.id} className="gst-pick-btn"
+                  onClick={() => selectCookware(c)} whileTap={{ scale: 0.9 }}>
+                  <img src={c.img} alt={c.name}
+                    onError={e => { (e.target as HTMLImageElement).style.display = 'none' }} />
+                  <span>{c.name}</span>
+                </motion.button>
+              )) : <span className="gst-pick-btn" style={{opacity: 0.7}}>No cookware selected from cabinet!</span>}
             </div>
-
-            {state === 'done' && (
-              <motion.button className="g-btn g-btn--gold" style={{ padding: '12px 26px', fontSize: 16 }}
-                onClick={finish} initial={{ scale: 0 }} animate={{ scale: 1 }} whileTap={{ scale: 0.95 }}>
-                <CheckCircle2 size={18} /> Serve!
+          ) : (
+            <div className="gst-cook-row">
+              <motion.button className={`gst-knob ${fireOn ? 'on' : ''}`}
+                onClick={toggleFire} whileTap={{ scale: 0.88 }} disabled={inPot.length === 0}>
+                <Flame size={22} strokeWidth={2} />
+                <span>{fireOn ? 'Fire OFF' : inPot.length === 0 ? 'Add food first' : 'Ignite'}</span>
               </motion.button>
-            )}
-            {state === 'burnt' && (
-              <motion.button className="g-btn g-btn--ghost" style={{ padding: '12px 22px', fontSize: 15 }}
-                onClick={finish}>Serve anyway…</motion.button>
-            )}
+  
+              <div className="gst-heat-mini">
+                {(['low', 'medium', 'high'] as HeatLevel[]).map(h => (
+                  <button key={h} className={`gst-heat-chip ${heatLevel === h ? 'active' : ''}`}
+                    onClick={() => setHeatLevel(h)}>{h}</button>
+                ))}
+              </div>
+  
+              {state === 'done' && (
+                <motion.button className="g-btn g-btn--gold" style={{ padding: '12px 26px', fontSize: 16 }}
+                  onClick={finish} initial={{ scale: 0 }} animate={{ scale: 1 }} whileTap={{ scale: 0.95 }}>
+                  <CheckCircle2 size={18} /> Serve!
+                </motion.button>
+              )}
+              {state === 'burnt' && (
+                <motion.button className="g-btn g-btn--ghost" style={{ padding: '12px 22px', fontSize: 15 }}
+                  onClick={finish}>Serve anyway…</motion.button>
+              )}
+            </div>
+          )
+        )}
+
+        {activeTab === 'utensils' && (
+          <div className="gst-pick-row">
+            <span className="gst-pick-label">Your Utensils:</span>
+            {invUtensils.length > 0 ? invUtensils.map(u => (
+              <motion.button key={u!.id} className="gst-pick-btn"
+                onClick={() => { flash(`${u!.name} is ready for use!`) }} whileTap={{ scale: 0.9 }}>
+                <img src={u!.image} alt={u!.name}
+                  onError={e => { (e.target as HTMLImageElement).style.display = 'none' }} />
+                <span>{u!.name}</span>
+              </motion.button>
+            )) : <span className="gst-pick-btn" style={{opacity: 0.7}}>No utensils selected from cabinet!</span>}
           </div>
         )}
         <p className="gst-hint">

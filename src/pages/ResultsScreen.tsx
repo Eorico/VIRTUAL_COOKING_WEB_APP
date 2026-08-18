@@ -39,15 +39,12 @@ export default function ResultsScreen({ setScreen }: SetScreenProps) {
     ? unlockedLevels.filter(l => !preLevels.current.includes(l))
     : []
 
-  // Only show washing row when score is meaningful (< 100 = some washable items existed)
-  const hasWashables = scores.washing < 100 || washedIngredients.length > 0
   const rows = [
-    { label: 'Ingredient Accuracy', w: '30%', val: scores.accuracy, show: true },
-    { label: 'Proper Washing',      w: '15%', val: scores.washing,  show: hasWashables },
-    { label: 'Cutting Technique',   w: '15%', val: scores.cutting,  show: true },
-    { label: 'Measuring Accuracy', w: '10%', val: scores.measuring, show: true },
-    { label: 'Cooking Accuracy',    w: '25%', val: scores.cooking,  show: true },
-    { label: 'Time Management',     w: '10%', val: scores.timing,   show: true },
+    { label: 'Ingredient Accuracy', w: '15%', val: scores.accuracy * 0.15, show: true },
+    { label: 'Cutting Technique',   w: '20%', val: scores.cutting * 0.20,  show: true },
+    { label: 'Measuring Accuracy',  w: '15%', val: scores.measuring * 0.15, show: true },
+    { label: 'Cooking Accuracy',    w: '35%', val: scores.cooking * 0.35,  show: true },
+    { label: 'Time Management',     w: '15%', val: scores.timing * 0.15,   show: true },
   ].filter(r => r.show)
 
   const printReport = () => {

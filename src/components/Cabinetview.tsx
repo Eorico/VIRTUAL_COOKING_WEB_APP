@@ -29,10 +29,7 @@ export default function CabinetView({ onClose }: Props) {
 
   const checkIsNeeded = (tool: ToolType) => {
     if (!selectedRecipe) return false
-    return selectedRecipe.tools.some(t => {
-      const n = t.toLowerCase()
-      return tool.name.toLowerCase() === n || tool.id === n || tool.name.toLowerCase().includes(n)
-    })
+    return selectedRecipe.tools.includes(tool.id)
   }
 
   const tapTool = (tool: ToolType) => {
@@ -40,6 +37,28 @@ export default function CabinetView({ onClose }: Props) {
       if (!checkIsNeeded(tool)) {
         addFeedback(`You don't need the ${tool.name} for this recipe!`, 'error')
         return
+      }
+
+      if (tool.category === 'pot') {
+        const existingPots = inventoryToolIds.filter(id => {
+          const t = toolCategories.flatMap(c => c.types).find(x => x.id === id)
+          return t?.category === 'pot'
+        })
+        if (existingPots.length >= 1) {
+          addFeedback(`You can only select exactly one pot per recipe!`, 'error')
+          return
+        }
+      }
+
+      if (tool.category === 'pan') {
+        const existingPans = inventoryToolIds.filter(id => {
+          const t = toolCategories.flatMap(c => c.types).find(x => x.id === id)
+          return t?.category === 'pan'
+        })
+        if (existingPans.length >= 1) {
+          addFeedback(`You can only select exactly one pan per recipe!`, 'error')
+          return
+        }
       }
     }
 
@@ -185,7 +204,6 @@ export default function CabinetView({ onClose }: Props) {
         {currentFeedback && (
           <motion.div
             className={`ek-toast ek-toast--${currentFeedback.type}`}
-            style={{ position: 'absolute', bottom: 126, left: '50%', transform: 'translateX(-50%)', zIndex: 60 }}
             initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 14 }}>
             {currentFeedback.message}
           </motion.div>
