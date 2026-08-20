@@ -3808,6 +3808,7 @@
   filter: grayscale(.7) brightness(.55) drop-shadow(0 6px 18px rgba(0, 0, 0, .8));
 }
 
+/* DEPRECATED — step images now replace pot contents
 .gst-pot-contents {
   position: absolute;
   top: 26%;
@@ -3824,6 +3825,7 @@
   object-fit: contain;
   filter: drop-shadow(0 2px 4px rgba(0, 0, 0, .5));
 }
+*/
 
 .gst-steam,
 .gst-smoke {
