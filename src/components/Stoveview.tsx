@@ -45,6 +45,7 @@ export default function StoveView({ onClose, onFinishCooking, selectedRecipe }: 
     recordLastDropTimestamp, lastDropTimestamp,
     recordFlameCenteringCheck, recordFlameCenteringResponse,
     flameCenteringChecks, flameCenteringResponses,
+    setCookedIngredients, recordChronologicalMistake,
   } = useGameStore()
 
   // Derive thresholds from the selected recipe (fallback 45s)
@@ -158,9 +159,11 @@ export default function StoveView({ onClose, onFinishCooking, selectedRecipe }: 
           return prev + 1;
         });
       } else if (expectedNext.startsWith('tool:')) {
+        recordChronologicalMistake();
         const requiredTool = expectedNext.split(':')[1];
         flash(`⚠ Wrong tool! You need the ${requiredTool} next.`);
       } else {
+        recordChronologicalMistake();
         flash(`⚠ You should add ${expectedNext} first!`);
       }
     } else {
@@ -192,11 +195,13 @@ export default function StoveView({ onClose, onFinishCooking, selectedRecipe }: 
         const expectedNext = expectedList[completedSteps];
         
         if (expectedNext.startsWith('tool:')) {
+          recordChronologicalMistake();
           const requiredTool = expectedNext.split(':')[1];
           flash(`⚠ SOP: Use the ${requiredTool} first!`);
           return;
         }
         if (name !== expectedNext) {
+          recordChronologicalMistake();
           flash(`⚠ SOP: Ingredients must be added in chronological order! Expected: ${expectedNext}`);
           return;
         }
@@ -211,6 +216,10 @@ export default function StoveView({ onClose, onFinishCooking, selectedRecipe }: 
       flash('⚠ SOP: Add ingredients carefully — don\'t rush! 🍳')
     }
     recordLastDropTimestamp(now)
+
+    if (selectedRecipe && selectedRecipe.chronologicalSteps) {
+      setCompletedSteps(prev => prev + 1)
+    }
 
     if (hopTimer.current) clearTimeout(hopTimer.current)
     const isSeasoning = ['salt', 'pepper', 'peppercorns', 'sinigang mix'].includes(name.toLowerCase())
@@ -284,6 +293,7 @@ export default function StoveView({ onClose, onFinishCooking, selectedRecipe }: 
   const finish = () => {
     stopCooking()
     setCookingElapsedTime(seconds)
+    setCookedIngredients(inPot)
 
     // SOP 4: Flame centering score
     if (flameCenteringChecks > 0) {
