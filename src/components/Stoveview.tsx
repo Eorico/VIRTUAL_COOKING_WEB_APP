@@ -10,6 +10,7 @@ import useGameStore from '../store/gameStore'
 import { toolCategories } from '../data/tools'
 import { getSlicesForIngredient } from '../data/sliceimages'
 import { RECIPE_COOKWARE, getRandomTip } from '../data/sopData'
+import { COOKING_STEP_IMAGES } from '../data/cookingStepImages'
 import type { Recipe, HeatLevel } from '../types'
 import GameTray from './ui/GameTray'
 import GameTooltip from './ui/GameTooltip'
@@ -44,6 +45,7 @@ export default function StoveView({ onClose, onFinishCooking, selectedRecipe }: 
     recordLastDropTimestamp, lastDropTimestamp,
     recordFlameCenteringCheck, recordFlameCenteringResponse,
     flameCenteringChecks, flameCenteringResponses,
+    setCookedIngredients, recordChronologicalMistake,
   } = useGameStore()
 
   // Derive thresholds from the selected recipe (fallback 45s)
@@ -61,7 +63,9 @@ export default function StoveView({ onClose, onFinishCooking, selectedRecipe }: 
     : (invPots.length ? invPots.map(t => ({ id: t!.id, name: t!.name, img: t!.image, type: t!.category as 'pot' | 'pan' | 'wok' })) : FALLBACK_POTS)
 
   const [cookware, setCookware] = useState<typeof cookwareOptions[0] | null>(null)
+  const [currentStepImage, setCurrentStepImage] = useState<string | null>(null)
   const [inPot, setInPot]       = useState<string[]>([])
+  const [completedSteps, setCompletedSteps] = useState<number>(0)
   const [hopping, setHopping]   = useState<{ img: string; key: number, type: 'hop' | 'shake' } | null>(null)
   const [fireOn, setFireOn]     = useState(false)
   const [seconds, setSeconds]   = useState(0)
@@ -87,6 +91,8 @@ export default function StoveView({ onClose, onFinishCooking, selectedRecipe }: 
   // Cleanup refs
   const flashTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
   const hopTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
+  // Tracks ingredients currently mid-animation to prevent double-tap re-add
+  const pendingDrops = useRef<Set<string>>(new Set())
 
   useEffect(() => {
     return () => {
@@ -113,6 +119,8 @@ export default function StoveView({ onClose, onFinishCooking, selectedRecipe }: 
   )
   const allInPot = readyIngredients.length > 0 && readyIngredients.every(i => inPot.includes(i.name))
 
+  const stepImageSet = selectedRecipe ? COOKING_STEP_IMAGES[selectedRecipe.id] : undefined
+
   // SOP 1: Check cookware alignment when cookware is selected
   const selectCookware = (c: typeof cookwareOptions[0]) => {
     setCookware(c)
@@ -134,13 +142,44 @@ export default function StoveView({ onClose, onFinishCooking, selectedRecipe }: 
     }
   }
 
+  const handleUtensilClick = (toolId: string, toolName: string) => {
+    if (!selectedRecipe || !selectedRecipe.chronologicalSteps) {
+      flash(`${toolName} is ready for use!`);
+      return;
+    }
+    
+    const expectedList = selectedRecipe.chronologicalSteps;
+    if (completedSteps < expectedList.length) {
+      const expectedNext = expectedList[completedSteps];
+      if (expectedNext === `tool:${toolId}`) {
+        // Correct tool!
+        flash(`Used the ${toolName}!`);
+        setCompletedSteps(prev => {
+          if (stepImageSet?.steps && prev < stepImageSet.steps.length) {
+            setCurrentStepImage(stepImageSet.steps[prev]);
+          }
+          return prev + 1;
+        });
+      } else if (expectedNext.startsWith('tool:')) {
+        recordChronologicalMistake();
+        const requiredTool = expectedNext.split(':')[1];
+        flash(`⚠ Wrong tool! You need the ${requiredTool} next.`);
+      } else {
+        recordChronologicalMistake();
+        flash(`⚠ You should add ${expectedNext} first!`);
+      }
+    } else {
+      flash(`${toolName} is ready for use!`);
+    }
+  }
+
   // SOP 4: Careful ingredient dropping
   const dropIn = (name: string) => {
     if (state === 'done' || state === 'burnt') return
     const ing = collectedIngredients.find(i => i.name === name)
     if (!ing) return
     if (!cookware) { flash('Pick a cookware first! 🍳'); return }
-    if (inPot.includes(name)) { flash(`${ing.name} is already in the ${cookware.name}!`); return }
+    if (inPot.includes(name) || pendingDrops.current.has(name)) { flash(`${ing.name} is already in the ${cookware.name}!`); return }
     if (getSlicesForIngredient(name) && !slicedIngredients.includes(name)) {
       flash(`✂ Slice the ${ing.name} at the Prep Table first!`); return
     }
@@ -150,14 +189,21 @@ export default function StoveView({ onClose, onFinishCooking, selectedRecipe }: 
       return
     }
 
-    // SOP: Enforce strict chronological drop order for Levels 1 and 2
-    if (selectedRecipe && selectedRecipe.level <= 2 && selectedRecipe.chronologicalIngredients) {
-      const expectedList = selectedRecipe.chronologicalIngredients;
-      const validDropsCount = inPot.filter(item => expectedList.includes(item)).length;
+    // Enforce strict chronological drop order for all recipes using chronologicalSteps
+    if (selectedRecipe && selectedRecipe.chronologicalSteps) {
+      const expectedList = selectedRecipe.chronologicalSteps;
       
-      if (validDropsCount < expectedList.length) {
-        const expectedNext = expectedList[validDropsCount];
+      if (completedSteps < expectedList.length) {
+        const expectedNext = expectedList[completedSteps];
+        
+        if (expectedNext.startsWith('tool:')) {
+          recordChronologicalMistake();
+          const requiredTool = expectedNext.split(':')[1];
+          flash(`⚠ SOP: Use the ${requiredTool} first!`);
+          return;
+        }
         if (name !== expectedNext) {
+          recordChronologicalMistake();
           flash(`⚠ SOP: Ingredients must be added in chronological order! Expected: ${expectedNext}`);
           return;
         }
@@ -173,12 +219,36 @@ export default function StoveView({ onClose, onFinishCooking, selectedRecipe }: 
     }
     recordLastDropTimestamp(now)
 
+    if (selectedRecipe && selectedRecipe.chronologicalSteps) {
+      setCompletedSteps(prev => prev + 1)
+    }
+
+    // Capture the step index BEFORE the increment for image lookup
+    const stepIndexForImage = completedSteps
+
+    // Mark as pending immediately to block re-taps during animation
+    pendingDrops.current.add(name)
+
     if (hopTimer.current) clearTimeout(hopTimer.current)
     const isSeasoning = ['salt', 'pepper', 'peppercorns', 'sinigang mix'].includes(name.toLowerCase())
     setHopping({ img: ing.image, key: Date.now(), type: isSeasoning ? 'shake' : 'hop' })
     hopTimer.current = setTimeout(() => {
       setHopping(null)
-      setInPot(p => p.includes(name) ? p : [...p, name])
+      setInPot(p => {
+        const next = p.includes(name) ? p : [...p, name]
+        if (stepImageSet?.steps) {
+          // Use chronologicalSteps index if available (correctly accounts for tool steps),
+          // otherwise fall back to pot item count
+          const imgIndex = selectedRecipe?.chronologicalSteps
+            ? stepIndexForImage
+            : next.length - 1
+          if (imgIndex < stepImageSet.steps.length) {
+            setCurrentStepImage(stepImageSet.steps[imgIndex])
+          }
+        }
+        return next
+      })
+      pendingDrops.current.delete(name)
     }, isSeasoning ? 800 : 1100) // Slower animation (SOP 4: deliberate placement)
   }
 
@@ -205,10 +275,14 @@ export default function StoveView({ onClose, onFinishCooking, selectedRecipe }: 
   useEffect(() => {
     if (seconds >= BURN_SECONDS && state !== 'burnt') {
       setState('burnt'); setBurnedFood(true)
+      setFireOn(false)
+      if (stepImageSet?.burnt) setCurrentStepImage(stepImageSet.burnt)
     } else if (seconds >= COOK_SECONDS && state === 'cooking') {
       setState('done')
+      setFireOn(false)
+      if (stepImageSet?.done) setCurrentStepImage(stepImageSet.done)
     }
-  }, [seconds, BURN_SECONDS, COOK_SECONDS, state, setBurnedFood])
+  }, [seconds, BURN_SECONDS, COOK_SECONDS, state, setBurnedFood, stepImageSet])
 
   // SOP 4: Flame centering check — appears every FLAME_CHECK_INTERVAL seconds while cooking
   useEffect(() => {
@@ -232,6 +306,7 @@ export default function StoveView({ onClose, onFinishCooking, selectedRecipe }: 
   const finish = () => {
     stopCooking()
     setCookingElapsedTime(seconds)
+    setCookedIngredients(inPot)
 
     // SOP 4: Flame centering score
     if (flameCenteringChecks > 0) {
@@ -320,7 +395,7 @@ export default function StoveView({ onClose, onFinishCooking, selectedRecipe }: 
         {/* SOP 1: Burner ring indicator has been removed */}
 
         <AnimatePresence>
-          {fireOn && state !== 'burnt' && (
+          {fireOn && state === 'cooking' && (
             <motion.img key="fire" src="/assets/kitchen/fire.png" className="gst-fire"
               initial={{ opacity: 0, scale: 0.6 }}
               animate={{ 
@@ -329,7 +404,7 @@ export default function StoveView({ onClose, onFinishCooking, selectedRecipe }: 
                      : heatLevel === 'high' ? [0.95, 1.0, 0.95] 
                      : [0.8, 0.85, 0.8] 
               }}
-              exit={{ opacity: 0, scale: 0.6 }}
+              exit={{ opacity: 0, scale: 0.6, transition: { repeat: 0, duration: 0.3 } }}
               transition={{ repeat: Infinity, duration: 1.2 }} />
           )}
         </AnimatePresence>
@@ -341,20 +416,19 @@ export default function StoveView({ onClose, onFinishCooking, selectedRecipe }: 
               animate={{ y: 0, opacity: 1, scale: 1 }}
               exit={{ y: -40, opacity: 0 }}
               transition={{ type: 'spring', damping: 15 }}>
-              <img src={cookware.img} alt={cookware.name} className="gst-pot-img"
-                onError={e => { (e.target as HTMLImageElement).style.display = 'none' }} />
-
-              <div className="gst-pot-contents">
-                {inPot.filter(n => !['salt', 'pepper', 'peppercorns', 'sinigang mix'].includes(n.toLowerCase())).slice(0, 5).map((name, i) => {
-                  const ing = collectedIngredients.find(x => x.name === name)
-                  return ing ? (
-                    <motion.img key={name} src={ing.image}
-                      initial={{ scale: 0 }} animate={{ scale: 1 }}
-                      style={{ left: `${12 + i * 16}%`, zIndex: i }}
-                      transition={{ type: 'spring', damping: 12 }} />
-                  ) : null
-                })}
-              </div>
+              <AnimatePresence mode="wait">
+                <motion.img
+                  key={currentStepImage || cookware.img}
+                  src={currentStepImage || cookware.img}
+                  alt={cookware.name}
+                  className="gst-pot-img"
+                  initial={{ opacity: 0.7 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0.7 }}
+                  transition={{ duration: 0.3 }}
+                  onError={e => { (e.target as HTMLImageElement).style.display = 'none' }}
+                />
+              </AnimatePresence>
 
               {fireOn && state === 'cooking' && [0, 1, 2].map(i => (
                 <motion.span key={i} className="gst-steam" style={{ left: `${28 + i * 20}%` }}
@@ -461,7 +535,7 @@ export default function StoveView({ onClose, onFinishCooking, selectedRecipe }: 
             <span className="gst-pick-label">Your Utensils:</span>
             {invUtensils.length > 0 ? invUtensils.map(u => (
               <motion.button key={u!.id} className="gst-pick-btn"
-                onClick={() => { flash(`${u!.name} is ready for use!`) }} whileTap={{ scale: 0.9 }}>
+                onClick={() => handleUtensilClick(u!.id, u!.name)} whileTap={{ scale: 0.9 }}>
                 <img src={u!.image} alt={u!.name}
                   onError={e => { (e.target as HTMLImageElement).style.display = 'none' }} />
                 <span>{u!.name}</span>

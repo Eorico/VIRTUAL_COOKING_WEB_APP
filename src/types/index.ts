@@ -72,6 +72,7 @@ export interface Recipe {
   image: string; ingredients: string[]; tools: string[]; steps: string[]
   narrativeIngredients?: string[]; narrativeTools?: string[]; narrativeSteps?: string[]
   chronologicalIngredients?: string[]
+  chronologicalSteps?: string[]
   minScore?: number
   // per-ingredient cut instructions
   cutInstructions?: Record<string, { technique: CuttingTechnique; size: string; description: string }>

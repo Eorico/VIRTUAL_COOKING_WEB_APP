@@ -65,6 +65,8 @@ interface GameState {
   stirCount: number
   requiredStirs: number
   cookingElapsedTime: number
+  cookedIngredients: string[]
+  chronologicalOrderMistakes: number
 
   // SOP Compliance
   sopCompliance: Record<string, SOPComplianceEntry>
@@ -131,6 +133,8 @@ interface GameActions {
   setBurnedFood: (burned: boolean) => void
   setUndercookedFood: (undercooked: boolean) => void
   setCookingElapsedTime: (time: number) => void
+  setCookedIngredients: (ingredients: string[]) => void
+  recordChronologicalMistake: () => void
 
   // SOP Compliance
   setCookwareMatch: (score: number) => void
@@ -201,6 +205,8 @@ const initialSessionState: Omit<
   stirCount: 0,
   requiredStirs: 5,
   cookingElapsedTime: 0,
+  cookedIngredients: [],
+  chronologicalOrderMistakes: 0,
   selectedKnifeId: null,
   inventoryToolIds: [],
   // SOP Compliance
@@ -263,6 +269,11 @@ const useGameStore = create<GameStore>()(
           collectedIngredients: [],
           selectedIngredients: [],
           ingredientErrors: 0,
+          washedIngredients: [],
+          slicedIngredients: [],
+          measuredIngredients: [],
+          cookedIngredients: [],
+          chronologicalOrderMistakes: 0,
         })
       },
 
@@ -385,6 +396,8 @@ const useGameStore = create<GameStore>()(
       setBurnedFood: (burned) => set({ burnedFood: burned }),
       setUndercookedFood: (undercooked) => set({ undercookedFood: undercooked }),
       setCookingElapsedTime: (time) => set({ cookingElapsedTime: time }),
+      setCookedIngredients: (ingredients) => set({ cookedIngredients: ingredients }),
+      recordChronologicalMistake: () => set((s) => ({ chronologicalOrderMistakes: s.chronologicalOrderMistakes + 1 })),
 
       // ---- SOP Compliance ----
       setCookwareMatch: (score) => set({ cookwareMatchScore: score }),
@@ -473,6 +486,27 @@ const useGameStore = create<GameStore>()(
         let cooking = 100
         if (s.burnedFood) cooking = 0
         else if (s.undercookedFood) cooking = 50
+
+        // ── Cooking Ingredient Completeness (Major Impact) ──
+        // Only ingredients that actually needed to be cooked in the pot
+        const totalCookReq = s.requiredIngredients.length
+        if (totalCookReq > 0) {
+          const cookedNormalized = s.cookedIngredients.map(c => c.toLowerCase().trim())
+          const cookedMatchCount = s.requiredIngredients.filter(req =>
+            cookedNormalized.includes(req.name.toLowerCase().trim())
+          ).length
+
+          // Missing ingredients severely penalize the cooking score
+          const ingredientCookingRatio = cookedMatchCount / totalCookReq
+          cooking = cooking * ingredientCookingRatio
+        }
+
+        // ── Chronological / Sequence Mistakes (Minor Deduction) ──
+        // Deduct 5 points per order mistake (capped so it won't drop below 0)
+        if (s.chronologicalOrderMistakes > 0) {
+          const orderPenalty = Math.min(25, s.chronologicalOrderMistakes * 5)
+          cooking = Math.max(0, cooking - orderPenalty)
+        }
 
         let timing = 100
         if (s.cookingDuration > 0) {

@@ -260,14 +260,17 @@ const SLICE_ALIASES: Record<string, string> = {
 /** Get slices map for an ingredient by name (case-insensitive partial match) */
 export function getSlicesForIngredient(name: string): SliceMap | null {
   const lower = name.toLowerCase()
-  
-  // Comprehensive blacklist to ensure liquids, pastes, powders, and sauces never accidentally match
-  const ignoreWords = ['paste', 'sauce', 'broth', 'stock', 'juice', 'spread', 'mix', 'oil', 'water', 'cream', 'powder', 'butter']
-  if (ignoreWords.some(w => lower.includes(w))) return null
-  
+
+  // Check aliases FIRST — before ignoreWords — so e.g. 'butternut squash'
+  // resolves to 'squash' slices instead of being blocked by the 'butter' blacklist.
   for (const [alias, key] of Object.entries(SLICE_ALIASES)) {
     if (lower.includes(alias)) return SLICE_IMAGES[key] ?? null
   }
+
+  // Comprehensive blacklist to ensure liquids, pastes, powders, and sauces never accidentally match
+  const ignoreWords = ['paste', 'sauce', 'broth', 'stock', 'juice', 'spread', 'mix', 'oil', 'water', 'cream', 'powder', 'butter']
+  if (ignoreWords.some(w => lower.includes(w))) return null
+
   const key = Object.keys(SLICE_IMAGES).find(k => lower.includes(k))
   return key ? SLICE_IMAGES[key] : null
 }
