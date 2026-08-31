@@ -116,6 +116,7 @@ export const recipes: Recipe[] = [
       "saucepan",
       "whisk",
       "spoon",
+      "ladle",
       "mcup",
       "mspoon",
       "chefs",
@@ -205,6 +206,7 @@ export const recipes: Recipe[] = [
     ],
     "tools": [
       "saucepan",
+      "whisk",
       "chefs",
       "cboard",
       "spoon",
@@ -354,6 +356,20 @@ export const recipes: Recipe[] = [
       "Salt",
       "Pepper"
     ],
+    "chronologicalSteps": [
+      "Cooking oil",
+      "Onion",
+      "Celery",
+      "Garlic",
+      "Chicken breast",
+      "Chicken broth",
+      "tool:ladle",
+      "Carrot",
+      "Egg noodles",
+      "tool:spoon",
+      "Salt",
+      "Pepper"
+    ],
     "tools": [
       "cboard",
       "chefs",
@@ -455,19 +471,20 @@ export const recipes: Recipe[] = [
       "Pepper"
     ],
     "chronologicalSteps": [
-      "Cooking oil",
+      "Butter",
       "Onion",
-      "Celery",
       "Garlic",
-      "Chicken breast",
-      "Chicken broth",
-      "Carrot",
-      "Egg noodles",
-      "Salt"
+      "Butternut squash",
+      "Vegetable broth",
+      "Cream",
+      "Salt",
+      "Pepper"
     ],
     "tools": [
       "cboard",
       "chefs",
+      "mcup",
+      "mspoon",
       "pot",
       "spoon",
       "ladle"
@@ -531,6 +548,7 @@ export const recipes: Recipe[] = [
     "minScore": 70,
     "cookingDuration": 90,
     "ingredients": [
+      "Butter",
       "Cream",
       "Garlic",
       "Onion",
@@ -539,6 +557,7 @@ export const recipes: Recipe[] = [
       "Tomato"
     ],
     "chronologicalIngredients": [
+      "Butter",
       "Onion",
       "Garlic",
       "Tomato",
@@ -549,15 +568,17 @@ export const recipes: Recipe[] = [
     "chronologicalSteps": [
       "Butter",
       "Onion",
-      "Potatoes",
-      "Corn kernels",
-      "Chicken broth",
-      "Milk",
-      "Salt"
+      "Garlic",
+      "Tomato",
+      "Cream",
+      "Salt",
+      "Pepper"
     ],
     "tools": [
       "cboard",
       "chefs",
+      "mcup",
+      "mspoon",
       "pot",
       "spoon",
       "ladle"
@@ -647,10 +668,12 @@ export const recipes: Recipe[] = [
     "chronologicalSteps": [
       "Butter",
       "Onion",
-      "Garlic",
-      "Butternut squash",
-      "Vegetable broth",
-      "Cream"
+      "Potatoes",
+      "Corn kernels",
+      "Chicken broth",
+      "Milk",
+      "Salt",
+      "Pepper"
     ],
     "tools": [
       "cboard",

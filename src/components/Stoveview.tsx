@@ -221,6 +221,9 @@ export default function StoveView({ onClose, onFinishCooking, selectedRecipe }: 
       setCompletedSteps(prev => prev + 1)
     }
 
+    // Capture the step index BEFORE the increment for image lookup
+    const stepIndexForImage = completedSteps
+
     if (hopTimer.current) clearTimeout(hopTimer.current)
     const isSeasoning = ['salt', 'pepper', 'peppercorns', 'sinigang mix'].includes(name.toLowerCase())
     setHopping({ img: ing.image, key: Date.now(), type: isSeasoning ? 'shake' : 'hop' })
@@ -229,9 +232,13 @@ export default function StoveView({ onClose, onFinishCooking, selectedRecipe }: 
       setInPot(p => {
         const next = p.includes(name) ? p : [...p, name]
         if (stepImageSet?.steps) {
-          const dropIndex = next.length - 1
-          if (dropIndex < stepImageSet.steps.length) {
-            setCurrentStepImage(stepImageSet.steps[dropIndex])
+          // Use chronologicalSteps index if available (correctly accounts for tool steps),
+          // otherwise fall back to pot item count
+          const imgIndex = selectedRecipe?.chronologicalSteps
+            ? stepIndexForImage
+            : next.length - 1
+          if (imgIndex < stepImageSet.steps.length) {
+            setCurrentStepImage(stepImageSet.steps[imgIndex])
           }
         }
         return next
