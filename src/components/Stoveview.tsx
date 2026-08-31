@@ -91,6 +91,8 @@ export default function StoveView({ onClose, onFinishCooking, selectedRecipe }: 
   // Cleanup refs
   const flashTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
   const hopTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
+  // Tracks ingredients currently mid-animation to prevent double-tap re-add
+  const pendingDrops = useRef<Set<string>>(new Set())
 
   useEffect(() => {
     return () => {
@@ -177,7 +179,7 @@ export default function StoveView({ onClose, onFinishCooking, selectedRecipe }: 
     const ing = collectedIngredients.find(i => i.name === name)
     if (!ing) return
     if (!cookware) { flash('Pick a cookware first! 🍳'); return }
-    if (inPot.includes(name)) { flash(`${ing.name} is already in the ${cookware.name}!`); return }
+    if (inPot.includes(name) || pendingDrops.current.has(name)) { flash(`${ing.name} is already in the ${cookware.name}!`); return }
     if (getSlicesForIngredient(name) && !slicedIngredients.includes(name)) {
       flash(`✂ Slice the ${ing.name} at the Prep Table first!`); return
     }
@@ -224,6 +226,9 @@ export default function StoveView({ onClose, onFinishCooking, selectedRecipe }: 
     // Capture the step index BEFORE the increment for image lookup
     const stepIndexForImage = completedSteps
 
+    // Mark as pending immediately to block re-taps during animation
+    pendingDrops.current.add(name)
+
     if (hopTimer.current) clearTimeout(hopTimer.current)
     const isSeasoning = ['salt', 'pepper', 'peppercorns', 'sinigang mix'].includes(name.toLowerCase())
     setHopping({ img: ing.image, key: Date.now(), type: isSeasoning ? 'shake' : 'hop' })
@@ -243,6 +248,7 @@ export default function StoveView({ onClose, onFinishCooking, selectedRecipe }: 
         }
         return next
       })
+      pendingDrops.current.delete(name)
     }, isSeasoning ? 800 : 1100) // Slower animation (SOP 4: deliberate placement)
   }
 

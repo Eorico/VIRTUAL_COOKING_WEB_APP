@@ -68,50 +68,65 @@ export const COOKING_STEP_IMAGES: Record<number, CookingStepImageSet> = {
       '/assets/COOKING PART/6-chicken-noodle-soup/4-add-garlic.png',
       '/assets/COOKING PART/6-chicken-noodle-soup/5-add-chicken-pieces.png',
       '/assets/COOKING PART/6-chicken-noodle-soup/6-pour-the-chicken-broth.png',
-      '/assets/COOKING PART/6-chicken-noodle-soup/7-ladle.png',
+      '/assets/COOKING PART/6-chicken-noodle-soup/7-ladle.png',       // tool:ladle
       '/assets/COOKING PART/6-chicken-noodle-soup/8-add-sliced-carrot.png',
       '/assets/COOKING PART/6-chicken-noodle-soup/9-stir-in-the-egg-noodles.png',
-      '/assets/COOKING PART/6-chicken-noodle-soup/9-stir-in-the-egg-noodles.png'
+      '/assets/COOKING PART/6-chicken-noodle-soup/9-stir-in-the-egg-noodles.png', // tool:spoon
+      '/assets/COOKING PART/6-chicken-noodle-soup/9-stir-in-the-egg-noodles.png', // Salt
+      '/assets/COOKING PART/6-chicken-noodle-soup/9-stir-in-the-egg-noodles.png', // Pepper
+      '/assets/COOKING PART/6-chicken-noodle-soup/9-stir-in-the-egg-noodles.png'  // Parsley
     ],
     done: '/assets/COOKING PART/6-chicken-noodle-soup/9-stir-in-the-egg-noodles.png',
     burnt: '/assets/COOKING PART/6-chicken-noodle-soup/10-overcooked.png'
   },
+  // recipe id 6 = Butternut Squash Soup (uses 8-butternut-squash-soup folder)
   6: {
     steps: [
-      '/assets/COOKING PART/6-chicken-noodle-soup/1-add-cooking-oil.png',
-      '/assets/COOKING PART/6-chicken-noodle-soup/2-add-onion.png',
-      '/assets/COOKING PART/6-chicken-noodle-soup/3-add-celery.png',
-      '/assets/COOKING PART/6-chicken-noodle-soup/4-add-garlic.png',
-      '/assets/COOKING PART/6-chicken-noodle-soup/5-add-chicken-pieces.png',
-      '/assets/COOKING PART/6-chicken-noodle-soup/6-pour-the-chicken-broth.png',
-      '/assets/COOKING PART/6-chicken-noodle-soup/8-add-sliced-carrot.png',
-      '/assets/COOKING PART/6-chicken-noodle-soup/9-stir-in-the-egg-noodles.png',
-      '/assets/COOKING PART/6-chicken-noodle-soup/9-stir-in-the-egg-noodles.png'
+      '/assets/COOKING PART/8-butternut-squash-soup/step-1-1.png', // Butter
+      '/assets/COOKING PART/8-butternut-squash-soup/step-2.png',   // Onion
+      '/assets/COOKING PART/8-butternut-squash-soup/step-3.png',   // Garlic
+      '/assets/COOKING PART/8-butternut-squash-soup/step-4.png',   // Butternut squash
+      '/assets/COOKING PART/8-butternut-squash-soup/step-5.png',   // Vegetable broth
+      '/assets/COOKING PART/8-butternut-squash-soup/step-5.png',   // tool:spoon
+      '/assets/COOKING PART/8-butternut-squash-soup/step-6.png',   // Cream
+      '/assets/COOKING PART/8-butternut-squash-soup/step-6.png',   // tool:ladle
+      '/assets/COOKING PART/8-butternut-squash-soup/step-6.png',   // Salt
+      '/assets/COOKING PART/8-butternut-squash-soup/step-6.png'    // Pepper
     ],
-    done: '/assets/COOKING PART/6-chicken-noodle-soup/7-ladle.png',
-    burnt: '/assets/COOKING PART/6-chicken-noodle-soup/10-overcooked.png'
+    done: '/assets/COOKING PART/8-butternut-squash-soup/step-6.png'
   },
+  // recipe id 7 = Tomato Soup (5-tomato-soup folder — currently empty, will update when assets arrive)
   7: {
     steps: [
-      '/assets/COOKING PART/7-corn-cowder-soup/step-1.png',
-      '/assets/COOKING PART/7-corn-cowder-soup/step-2.png',
-      '/assets/COOKING PART/7-corn-cowder-soup/step-3.png',
-      '/assets/COOKING PART/7-corn-cowder-soup/step-4.png',
-      '/assets/COOKING PART/7-corn-cowder-soup/step-5.png',
-      '/assets/COOKING PART/7-corn-cowder-soup/step-6.png',
-      '/assets/COOKING PART/7-corn-cowder-soup/step-6.png'
+      '/assets/COOKING PART/3-tomato-sauce/1-heat-olive-oil.png',  // Butter
+      '/assets/COOKING PART/3-tomato-sauce/2-cook-the-onion.png',  // Onion
+      '/assets/COOKING PART/3-tomato-sauce/3-add-the-garlic.png',  // Garlic
+      '/assets/COOKING PART/3-tomato-sauce/4-crushed-tomatoes.png', // Tomato
+      '/assets/COOKING PART/3-tomato-sauce/4-crushed-tomatoes.png', // Vegetable broth
+      '/assets/COOKING PART/3-tomato-sauce/7-cook-the-sauce.png',  // tool:spoon
+      '/assets/COOKING PART/3-tomato-sauce/5-add-salt-and-pepper.png', // Cream
+      '/assets/COOKING PART/3-tomato-sauce/6-whisk.png',           // tool:ladle
+      '/assets/COOKING PART/3-tomato-sauce/5-add-salt-and-pepper.png', // Salt
+      '/assets/COOKING PART/3-tomato-sauce/5-add-salt-and-pepper.png'  // Pepper
     ],
-    done: '/assets/COOKING PART/7-corn-cowder-soup/step-7.png'
+    done: '/assets/COOKING PART/3-tomato-sauce/8-good.png',
+    burnt: '/assets/COOKING PART/3-tomato-sauce/9-burnt.png'
   },
+  // recipe id 8 = Corn Chowder (uses 7-corn-chowder-soup folder)
   8: {
     steps: [
-      '/assets/COOKING PART/8-butternut-squash-soup/step-1-1.png',
-      '/assets/COOKING PART/8-butternut-squash-soup/step-2.png',
-      '/assets/COOKING PART/8-butternut-squash-soup/step-3.png',
-      '/assets/COOKING PART/8-butternut-squash-soup/step-4.png',
-      '/assets/COOKING PART/8-butternut-squash-soup/step-5.png',
-      '/assets/COOKING PART/8-butternut-squash-soup/step-6.png'
-    ]
+      '/assets/COOKING PART/7-corn-chowder-soup/step-1.png', // Butter
+      '/assets/COOKING PART/7-corn-chowder-soup/step-2.png', // Onion
+      '/assets/COOKING PART/7-corn-chowder-soup/step-3.png', // Potatoes
+      '/assets/COOKING PART/7-corn-chowder-soup/step-4.png', // Corn kernels
+      '/assets/COOKING PART/7-corn-chowder-soup/step-5.png', // Chicken broth
+      '/assets/COOKING PART/7-corn-chowder-soup/step-5.png', // tool:spoon
+      '/assets/COOKING PART/7-corn-chowder-soup/step-6.png', // Milk
+      '/assets/COOKING PART/7-corn-chowder-soup/step-6.png', // tool:ladle
+      '/assets/COOKING PART/7-corn-chowder-soup/step-7.png', // Salt
+      '/assets/COOKING PART/7-corn-chowder-soup/step-7.png'  // Pepper
+    ],
+    done: '/assets/COOKING PART/7-corn-chowder-soup/step-7.png'
   },
   9: {
     steps: [

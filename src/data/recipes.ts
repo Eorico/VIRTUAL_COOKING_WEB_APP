@@ -368,7 +368,8 @@ export const recipes: Recipe[] = [
       "Egg noodles",
       "tool:spoon",
       "Salt",
-      "Pepper"
+      "Pepper",
+      "Parsley"
     ],
     "tools": [
       "cboard",
@@ -476,7 +477,9 @@ export const recipes: Recipe[] = [
       "Garlic",
       "Butternut squash",
       "Vegetable broth",
+      "tool:spoon",
       "Cream",
+      "tool:ladle",
       "Salt",
       "Pepper"
     ],
@@ -554,13 +557,15 @@ export const recipes: Recipe[] = [
       "Onion",
       "Pepper",
       "Salt",
-      "Tomato"
+      "Tomato",
+      "Vegetable broth"
     ],
     "chronologicalIngredients": [
       "Butter",
       "Onion",
       "Garlic",
       "Tomato",
+      "Vegetable broth",
       "Cream",
       "Salt",
       "Pepper"
@@ -570,7 +575,10 @@ export const recipes: Recipe[] = [
       "Onion",
       "Garlic",
       "Tomato",
+      "Vegetable broth",
+      "tool:spoon",
       "Cream",
+      "tool:ladle",
       "Salt",
       "Pepper"
     ],
@@ -671,7 +679,9 @@ export const recipes: Recipe[] = [
       "Potatoes",
       "Corn kernels",
       "Chicken broth",
+      "tool:spoon",
       "Milk",
+      "tool:ladle",
       "Salt",
       "Pepper"
     ],
@@ -679,6 +689,7 @@ export const recipes: Recipe[] = [
       "cboard",
       "chefs",
       "mcup",
+      "mspoon",
       "pot",
       "spoon",
       "ladle"
