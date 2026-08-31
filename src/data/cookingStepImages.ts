@@ -2,6 +2,7 @@ export interface CookingStepImageSet {
   steps: string[]
   done?: string
   burnt?: string
+  burning?: string
 }
 
 export const COOKING_STEP_IMAGES: Record<number, CookingStepImageSet> = {
@@ -130,30 +131,34 @@ export const COOKING_STEP_IMAGES: Record<number, CookingStepImageSet> = {
   },
   9: {
     steps: [
-      '/assets/COOKING PART/9-adobo/2-put-the-chicken.png',
-      '/assets/COOKING PART/9-adobo/3-add-soysauce.png',
-      '/assets/COOKING PART/9-adobo/4-add-garlic.png',
-      '/assets/COOKING PART/9-adobo/5-add-oil.png',
-      '/assets/COOKING PART/9-adobo/8-add-water.png',
-      '/assets/COOKING PART/9-adobo/9-add-vinegar.png',
-      '/assets/COOKING PART/9-adobo/10-add-bay-leaf.png',
-      '/assets/COOKING PART/9-adobo/11-pepper.png'
+      '/assets/COOKING PART/9-adobo/5-add-oil.png',                    // Cooking oil
+      '/assets/COOKING PART/9-adobo/6-put-the-marinated-chicken.png',  // Chicken
+      '/assets/COOKING PART/9-adobo/7-put-the-marinated-soysauce.png', // Soy sauce
+      '/assets/COOKING PART/9-adobo/7-put-the-marinated-soysauce.png', // Garlic (no image change)
+      '/assets/COOKING PART/9-adobo/7-put-the-marinated-soysauce.png', // tool:spoon (stays)
+      '/assets/COOKING PART/9-adobo/8-add-water.png',                  // Water
+      '/assets/COOKING PART/9-adobo/9-add-vinegar.png',                // Vinegar
+      '/assets/COOKING PART/9-adobo/10-add-bay-leaf.png',              // Bay leaves
+      '/assets/COOKING PART/9-adobo/11-pepper.png',                    // Peppercorns
+      '/assets/COOKING PART/9-adobo/12-simmer.png'                     // tool:ladle
     ],
     done: '/assets/COOKING PART/9-adobo/good.png',
-    burnt: '/assets/COOKING PART/9-adobo/burnt.png'
+    burnt: '/assets/COOKING PART/9-adobo/burnt.png',
+    burning: '/assets/COOKING PART/9-adobo/13-burnt.png'
   },
+
   10: {
     steps: [
-      '/assets/COOKING PART/10-sinigang/1.png',
-      '/assets/COOKING PART/10-sinigang/2.png',
-      '/assets/COOKING PART/10-sinigang/3.png',
-      '/assets/COOKING PART/10-sinigang/4.png',
-      '/assets/COOKING PART/10-sinigang/5.png',
-      '/assets/COOKING PART/10-sinigang/6.png',
-      '/assets/COOKING PART/10-sinigang/pork-sinigang.png',
-      '/assets/COOKING PART/10-sinigang/8-kangkong.png'
+      '/assets/COOKING PART/10-sinigang/1.png',           // Pork belly
+      '/assets/COOKING PART/10-sinigang/2.png',           // Water
+      '/assets/COOKING PART/10-sinigang/3.png',           // Onion
+      '/assets/COOKING PART/10-sinigang/4.png',           // Tomato
+      '/assets/COOKING PART/10-sinigang/5.png',           // Radish
+      '/assets/COOKING PART/10-sinigang/6.png',           // Sitaw
+      '/assets/COOKING PART/10-sinigang/6.png',           // Sinigang mix (no image change, remains on previous image)
+      '/assets/COOKING PART/10-sinigang/8-kangkong.png'    // Kangkong (changes to next image)
     ],
-    done: '/assets/COOKING PART/10-sinigang/8-done'
+    done: '/assets/COOKING PART/10-sinigang/8.sinigangDone.png'
   },
   11: {
     steps: [
