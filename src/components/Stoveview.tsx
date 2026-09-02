@@ -121,6 +121,13 @@ export default function StoveView({ onClose, onFinishCooking, selectedRecipe }: 
 
   const stepImageSet = selectedRecipe ? COOKING_STEP_IMAGES[selectedRecipe.id] : undefined
 
+  const isPakbet = selectedRecipe?.name?.toLowerCase() === 'pakbet' || selectedRecipe?.id === 11
+  const isCaldereta = selectedRecipe?.name?.toLowerCase().includes('caldereta') || selectedRecipe?.id === 12
+  const recipeClass = selectedRecipe ? `gst-recipe-${selectedRecipe.id} gst-recipe-${selectedRecipe.name.toLowerCase().replace(/[^a-z0-9]+/g, '-')}` : ''
+  const stepClass = currentStepImage ? 'gst-pot--step-img' : ''
+  const pakbetCookingClass = (isPakbet && currentStepImage && state !== 'served' && state !== 'served-burnt') ? 'gst-pot--pakbet-cooking' : ''
+  const calderetaCookingClass = (isCaldereta && currentStepImage && state !== 'served' && state !== 'served-burnt') ? 'gst-pot--caldereta-cooking' : ''
+
   // SOP 1: Check cookware alignment when cookware is selected
   const selectCookware = (c: typeof cookwareOptions[0]) => {
     setCookware(c)
@@ -432,7 +439,7 @@ export default function StoveView({ onClose, onFinishCooking, selectedRecipe }: 
 
         <AnimatePresence>
           {cookware && (
-            <motion.div key={cookware.id} className={`gst-pot gst-pot--${state} gst-pot--${cookware.id}`}
+            <motion.div key={cookware.id} className={`gst-pot gst-pot--${state} gst-pot--${cookware.id} ${recipeClass} ${stepClass} ${pakbetCookingClass} ${calderetaCookingClass}`.trim()}
               initial={{ y: -60, opacity: 0, scale: 0.7 }}
               animate={{ y: 0, opacity: 1, scale: 1 }}
               exit={{ y: -40, opacity: 0 }}
@@ -442,7 +449,7 @@ export default function StoveView({ onClose, onFinishCooking, selectedRecipe }: 
                   key={currentStepImage || cookware.img}
                   src={currentStepImage || cookware.img}
                   alt={cookware.name}
-                  className="gst-pot-img"
+                  className={`gst-pot-img ${currentStepImage ? 'gst-pot-img--step' : ''} ${isPakbet && currentStepImage ? 'gst-pot-img--pakbet-cooking' : ''} ${isCaldereta && currentStepImage ? 'gst-pot-img--caldereta-cooking' : ''}`.trim()}
                   initial={{ opacity: 0.7 }}
                   animate={{ opacity: 1 }}
                   exit={{ opacity: 0.7 }}

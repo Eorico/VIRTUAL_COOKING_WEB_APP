@@ -167,7 +167,23 @@ export const COOKING_STEP_IMAGES: Record<number, CookingStepImageSet> = {
       '/assets/COOKING PART/11-pakbet/step-4-1.png'
     ]
   },
-  12: { steps: [] },
+  12: {
+    steps: [
+      '/assets/COOKING PART/15. BEEF CALDERETA/1  Add cooking oil.png',        // Cooking oil
+      '/assets/COOKING PART/15. BEEF CALDERETA/Step 2  Sauté the aromatics_.png', // Garlic
+      '/assets/COOKING PART/15. BEEF CALDERETA/Step 2  Sauté the aromatics_.png', // Onion
+      '/assets/COOKING PART/15. BEEF CALDERETA/Step 3_ Brown the beef_.png',      // Beef
+      '/assets/COOKING PART/15. BEEF CALDERETA/Step 4_ Add the sauce_.png',       // Tomato sauce
+      '/assets/COOKING PART/15. BEEF CALDERETA/Step 5_ Simmer the beef_.png',     // Water
+      '/assets/COOKING PART/15. BEEF CALDERETA/Step 6_ Add the vegetables_.png',  // Potatoes
+      '/assets/COOKING PART/15. BEEF CALDERETA/Step 6_ Add the vegetables_.png',  // Carrot
+      '/assets/COOKING PART/15. BEEF CALDERETA/Step 7_ Finish the dish_.png',     // Liver spread
+      '/assets/COOKING PART/15. BEEF CALDERETA/Step 7_ Finish the dish_.png',     // Bell pepper
+      '/assets/COOKING PART/15. BEEF CALDERETA/Step 7_ Finish the dish_.png',     // Salt
+      '/assets/COOKING PART/15. BEEF CALDERETA/Step 7_ Finish the dish_.png'      // Pepper
+    ],
+    done: '/assets/COOKING PART/15. BEEF CALDERETA/Step 8_ Serve_.png'
+  },
   13: {
     steps: [
       '/assets/COOKING PART/13-fish-escabeche/step-1.png',

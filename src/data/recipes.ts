@@ -1085,6 +1085,34 @@ export const recipes: Recipe[] = [
       "Tomato sauce",
       "Water"
     ],
+    "chronologicalIngredients": [
+      "Cooking oil",
+      "Garlic",
+      "Onion",
+      "Beef",
+      "Tomato sauce",
+      "Water",
+      "Potatoes",
+      "Carrot",
+      "Liver spread",
+      "Bell pepper",
+      "Salt",
+      "Pepper"
+    ],
+    "chronologicalSteps": [
+      "Cooking oil",
+      "Garlic",
+      "Onion",
+      "Beef",
+      "Tomato sauce",
+      "Water",
+      "Potatoes",
+      "Carrot",
+      "Liver spread",
+      "Bell pepper",
+      "Salt",
+      "Pepper"
+    ],
     "tools": [
       "cboard",
       "chefs",

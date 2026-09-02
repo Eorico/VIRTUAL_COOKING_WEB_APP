@@ -3793,6 +3793,20 @@
 .gst-pot--roasting { width: 280px; left: 53%; top: 53%; }
 .gst-pot--saucepan { width: 300px; left: 55%; top: 53%; }
 
+/* ── PAKBET SPECIFIC COOKING STEP POSITIONING (Starting from Cooking Oil) ──────── */
+.gst-pot.gst-pot--pakbet-cooking {
+  width: 210px;    /* ← Adjust Pakbet cooking image width/size */
+  left: 55%;       /* ← Adjust Pakbet horizontal position (left/right) */
+  top: 47%;        /* ← Adjust Pakbet vertical position (up/down) */
+}
+
+/* ── BEEF CALDERETA SPECIFIC COOKING STEP POSITIONING (Starting from Cooking Oil) ──────── */
+.gst-pot.gst-pot--caldereta-cooking {
+  width: 210px;    /* ← Adjust Beef Caldereta cooking image width/size */
+  left: 55%;       /* ← Adjust Beef Caldereta horizontal position (left/right) */
+  top: 43%;        /* ← Adjust Beef Caldereta vertical position (up/down) */
+}
+
 
 .gst-pot-img {
   width: 100%;
