@@ -1415,6 +1415,16 @@ export const recipes: Recipe[] = [
       "Season with salt",
       "Serve with bagoong on the side"
     ],
+    "chronologicalSteps": [
+      "Water",
+      "Beef",
+      "Peanut butter",
+      "tool:spoon",
+      "Eggplant",
+      "String beans",
+      "Bok choy",
+      "Salt"
+    ],
     "cutInstructions": {
       "Eggplant": {
         "technique": "slice",
@@ -1583,11 +1593,16 @@ export const recipes: Recipe[] = [
     ],
     "chronologicalSteps": [
       "Cooking oil",
+      "Garlic",
       "Onion",
-      "Cream of mushroom soup",
-      "Corn tortillas",
-      "Chicken",
-      "Cheese"
+      "Pork",
+      "Tomato sauce",
+      "Water",
+      "Potatoes",
+      "Carrot",
+      "Bell pepper",
+      "Salt",
+      "Pepper"
     ],
     "steps": [
       "Cut pork into cubes",
@@ -1778,6 +1793,18 @@ export const recipes: Recipe[] = [
       "Top with cheese",
       "Bake at 350°F for 30 minutes",
       "Serve hot"
+    ],
+    "chronologicalSteps": [
+      "Cooking oil",
+      "Onion",
+      "Bell pepper",
+      "Cream of mushroom",
+      "Tomato",
+      "Chicken broth",
+      "Chicken shredded",
+      "tool:spoon",
+      "Corn tortillas",
+      "Shredded cheese"
     ],
     "cutInstructions": {
       "Onion": {
