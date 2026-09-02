@@ -763,32 +763,35 @@ export const recipes: Recipe[] = [
       "Water"
     ],
     "chronologicalIngredients": [
+      "Cooking oil",
       "Chicken",
       "Soy sauce",
       "Garlic",
-      "Cooking oil",
       "Water",
       "Vinegar",
       "Bay leaves",
       "Peppercorns"
     ],
     "chronologicalSteps": [
+      "Cooking oil",
       "Chicken",
       "Soy sauce",
       "Garlic",
-      "Cooking oil",
+      "tool:spoon",
       "Water",
       "Vinegar",
       "Bay leaves",
-      "Peppercorns"
+      "Peppercorns",
+      "tool:ladle"
     ],
     "tools": [
       "cboard",
       "chefs",
       "mcup",
       "mspoon",
-      "pot",
-      "spoon"
+      "brazier",
+      "spoon",
+      "ladle"
     ],
     "steps": [
       "Cut chicken into serving pieces",
@@ -808,12 +811,10 @@ export const recipes: Recipe[] = [
     },
     "narrativeIngredients": [
       "1 kg chicken",
-      "cut into serving pieces",
       "½ cup soy sauce",
       "¼ cup vinegar",
       "1 cup water",
       "4 cloves garlic",
-      "crushed",
       "2 bay leaves",
       "1 tsp whole peppercorns",
       "1 tbsp cooking oil"
@@ -923,10 +924,8 @@ export const recipes: Recipe[] = [
       "500 g pork belly or pork ribs",
       "6 cups water",
       "1 packet sinigang mix",
-      "1 tomato",
-      "quartered",
-      "1 onion",
-      "quartered",
+      "1 tomato, quartered",
+      "1 onion, quartered",
       "1 cup kangkong (water spinach)",
       "1 cup string beans, cut into pieces",
       "1 radish, sliced"
@@ -991,7 +990,7 @@ export const recipes: Recipe[] = [
       "chefs",
       "mcup",
       "mspoon",
-      "wok",
+      "pot",
       "spoon"
     ],
     "steps": [
@@ -1035,8 +1034,7 @@ export const recipes: Recipe[] = [
       }
     },
     "narrativeIngredients": [
-      "1 cup squash",
-      "cubed",
+      "1 cup squash, cubed",
       "1 eggplant, sliced",
       "1 cup string beans, cut into pieces",
       "1 cup bitter melon (ampalaya), sliced",
@@ -1086,6 +1084,34 @@ export const recipes: Recipe[] = [
       "Salt",
       "Tomato sauce",
       "Water"
+    ],
+    "chronologicalIngredients": [
+      "Cooking oil",
+      "Garlic",
+      "Onion",
+      "Beef",
+      "Tomato sauce",
+      "Water",
+      "Potatoes",
+      "Carrot",
+      "Liver spread",
+      "Bell pepper",
+      "Salt",
+      "Pepper"
+    ],
+    "chronologicalSteps": [
+      "Cooking oil",
+      "Garlic",
+      "Onion",
+      "Beef",
+      "Tomato sauce",
+      "Water",
+      "Potatoes",
+      "Carrot",
+      "Liver spread",
+      "Bell pepper",
+      "Salt",
+      "Pepper"
     ],
     "tools": [
       "cboard",
@@ -1140,10 +1166,8 @@ export const recipes: Recipe[] = [
       "4 cloves garlic, minced",
       "2 cups tomato sauce",
       "2 cups water or beef broth",
-      "2 potatoes",
-      "cubed",
-      "1 carrot",
-      "cubed",
+      "2 potatoes, cubed",
+      "1 carrot, cubed",
       "1 red bell pepper, sliced",
       "2 tbsp liver spread",
       "Salt to taste",
@@ -1239,12 +1263,10 @@ export const recipes: Recipe[] = [
       }
     },
     "narrativeIngredients": [
-      "1 whole fish (tilapia or lapu-lapu)",
-      "cleaned",
+      "1 whole fish (tilapia or lapu-lapu), cleaned",
       "2 tbsp cooking oil",
       "1 onion, sliced",
-      "1 carrot",
-      "sliced into strips",
+      "1 carrot, sliced into strips",
       "1 red bell pepper, sliced",
       "½ cup vinegar",
       "¼ cup sugar",
@@ -1334,13 +1356,10 @@ export const recipes: Recipe[] = [
     "narrativeIngredients": [
       "1 kg beef shank with bone marrow",
       "8 cups water",
-      "1 onion",
-      "quartered",
+      "1 onion, quartered",
       "2 corn cobs, cut into pieces",
-      "2 potatoes",
-      "quartered",
-      "1 small cabbage",
-      "cut into wedges",
+      "2 potatoes, quartered",
+      "1 small cabbage, cut into wedges",
       "Salt to taste",
       "Pepper to taste"
     ],
@@ -1698,10 +1717,8 @@ export const recipes: Recipe[] = [
     },
     "narrativeIngredients": [
       "1 kg beef flank steak",
-      "2 carrots",
-      "cut into strips",
-      "2 hotdogs",
-      "cut into strips",
+      "2 carrots, cut into strips",
+      "2 hotdogs, cut into strips",
       "2 hard-boiled eggs, sliced",
       "½ cup pickle relish",
       "2 tbsp soy sauce",
@@ -1781,8 +1798,7 @@ export const recipes: Recipe[] = [
       }
     },
     "narrativeIngredients": [
-      "500 g cooked chicken",
-      "shredded",
+      "500 g cooked chicken, shredded",
       "1 onion, chopped",
       "1 bell pepper, chopped",
       "1 can cream of mushroom soup",

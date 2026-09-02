@@ -186,7 +186,7 @@ export const RECIPE_COOKWARE: Record<number, { cookware: 'pot' | 'pan' | 'wok' }
   // Level 2 — Filipino Basic
   9:  { cookware: 'pot' },    // Chicken Adobo
   10: { cookware: 'pot' },    // Pork Sinigang
-  11: { cookware: 'wok' },    // Pakbet
+  11: { cookware: 'pot' },    // Pakbet
   // Level 3 — Intermediate
   12: { cookware: 'pot' },    // Beef Caldereta
   13: { cookware: 'pan' },   // Fish Escabeche
