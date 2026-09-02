@@ -1216,7 +1216,6 @@ export const recipes: Recipe[] = [
     "tools": [
       "cboard",
       "chefs",
-      "frypan",
       "saucepan",
       "spoon",
       "tongs"
