@@ -1,11 +1,12 @@
 import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Refrigerator, GalleryVerticalEnd, Scissors, Droplets, Flame, ChevronLeft, CheckCircle2, ChevronRight, Snowflake, Package } from 'lucide-react'
+import { Refrigerator, GalleryVerticalEnd, Scissors, Droplets, Flame, ChevronLeft, CheckCircle2, ChevronRight, Snowflake, Package, Microwave } from 'lucide-react'
 import FridgeView    from '../components/Fridgeview'
 import CabinetView   from '../components/Cabinetview'
 import PrepView      from '../components/Prepview'
 import SinkView      from '../components/Sinkview'
 import StoveView     from '../components/Stoveview'
+import MicrowaveView from '../components/Microwaveview'
 import RecipeCard    from './RecipeCard'
 import InventoryPanel from '../components/ui/InventoryPanel'
 import useGameStore  from '../store/gameStore'
@@ -14,7 +15,7 @@ import { isWashable } from '../data/ingredients'
 import { getSlicesForIngredient } from '../data/sliceimages'
 
 interface Props { onBack: () => void; onFinish: () => void }
-type Station     = 'freezer' | 'fridge' | 'shelf' | 'cabinet' | 'prep' | 'sink' | 'stove' | null
+type Station     = 'freezer' | 'fridge' | 'shelf' | 'cabinet' | 'prep' | 'sink' | 'stove' | 'microwave' | null
 type KitchenStep = 'ingredients' | 'washing' | 'slicing' | 'measuring' | 'cooking'
 
 const STEPS: { key: KitchenStep; label: string }[] = [
@@ -93,9 +94,11 @@ export default function EducationalKitchen({ onBack, onFinish }: Props) {
     if (active === 'prep')    return <PrepView onClose={() => setActive(null)} />
     if (active === 'sink')    return <SinkView onClose={() => setActive(null)} />
     if (active === 'stove')   return <StoveView onClose={() => setActive(null)} onFinishCooking={onFinish} selectedRecipe={selectedRecipe} />
+    if (active === 'microwave') return <MicrowaveView onClose={() => setActive(null)} onFinishCooking={onFinish} selectedRecipe={selectedRecipe} />
     return null;
   }
 
+  const isKingRanch = selectedRecipe?.id === 19;
   const ActiveView = getActiveView();
 
   return (
@@ -179,6 +182,16 @@ export default function EducationalKitchen({ onBack, onFinish }: Props) {
               <div className="ek-stn-icon"><Flame size={28} strokeWidth={1.5} /></div>
               <span>Stove</span>
             </motion.button>
+
+            {/* King Ranch Chicken only: Microwave / Oven button */}
+            {isKingRanch && (
+              <motion.button className={`ek-stn-btn ek-stn-btn--microwave ${kitchenStep === 'cooking' ? 'ek-stn-btn--cta' : ''}`}
+                style={{ right: '16%', top: '44%' }}
+                onClick={() => setActive('microwave')}>
+                <div className="ek-stn-icon"><Microwave size={28} strokeWidth={1.5} /></div>
+                <span>Microwave</span>
+              </motion.button>
+            )}
           </div>
 
           {/* Action bar */}

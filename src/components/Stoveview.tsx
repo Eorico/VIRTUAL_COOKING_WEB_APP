@@ -75,8 +75,12 @@ export default function StoveView({ onClose, onFinishCooking, selectedRecipe }: 
   const [warn, setWarn]         = useState('')
   const [activeTab, setActiveTab] = useState<'cookware' | 'utensils'>('cookware')
 
+  const requiredToolIds = selectedRecipe?.chronologicalSteps
+    ?.filter(s => s.startsWith('tool:'))
+    .map(s => s.replace('tool:', '')) || [];
+
   const invUtensils = inventoryToolIds
-    .map(id => allTools.find(t => t.id === id && t.category === 'utensil' && t.id !== 'cboard'))
+    .map(id => allTools.find(t => t.id === id && (t.category === 'utensil' || requiredToolIds.includes(t.id)) && t.id !== 'cboard'))
     .filter(Boolean)
 
 
@@ -127,6 +131,34 @@ export default function StoveView({ onClose, onFinishCooking, selectedRecipe }: 
   const stepClass = currentStepImage ? 'gst-pot--step-img' : ''
   const pakbetCookingClass = (isPakbet && currentStepImage && state !== 'served' && state !== 'served-burnt') ? 'gst-pot--pakbet-cooking' : ''
   const calderetaCookingClass = (isCaldereta && currentStepImage && state !== 'served' && state !== 'served-burnt') ? 'gst-pot--caldereta-cooking' : ''
+
+  const isMorcon = selectedRecipe?.id === 18;
+  const isKingRanch = selectedRecipe?.id === 17;
+  const isPasta = selectedRecipe?.id === 16;
+  const isBulalo = selectedRecipe?.id === 14;
+
+  let recipeStepClass = '';
+  if (currentStepImage) {
+    if (isMorcon) {
+      const match = currentStepImage.match(/\/(\d+)-[^\/]+\.png/);
+      if (match) recipeStepClass = `gst-pot--morcon-step-${match[1]}`;
+    } else if (isKingRanch) {
+      const match = currentStepImage.match(/\/(\d+)-[^\/]+\.png/);
+      if (match) recipeStepClass = `gst-pot--king-ranch-step-${match[1]}`;
+    } else if (isPasta) {
+      const match = currentStepImage.match(/\/(\d+)-[^\/]+\.png/);
+      if (match) {
+        const stepNum = parseInt(match[1]);
+        if (stepNum >= 1 && stepNum <= 3) recipeStepClass = 'gst-pot--pasta-large-pot';
+        else if (stepNum === 11) recipeStepClass = 'gst-pot--pasta-step-11';
+        else if (stepNum === 12) recipeStepClass = 'gst-pot--pasta-step-12';
+        else if (stepNum >= 5) recipeStepClass = 'gst-pot--pasta-fry-pan';
+      }
+    } else if (isBulalo) {
+      const match = currentStepImage.match(/step(\d+)\.png/);
+      if (match) recipeStepClass = `gst-pot--bulalo-step-${match[1]}`;
+    }
+  }
 
   // SOP 1: Check cookware alignment when cookware is selected
   const selectCookware = (c: typeof cookwareOptions[0]) => {
@@ -439,7 +471,7 @@ export default function StoveView({ onClose, onFinishCooking, selectedRecipe }: 
 
         <AnimatePresence>
           {cookware && (
-            <motion.div key={cookware.id} className={`gst-pot gst-pot--${state} gst-pot--${cookware.id} ${recipeClass} ${stepClass} ${pakbetCookingClass} ${calderetaCookingClass}`.trim()}
+            <motion.div key={cookware.id} className={`gst-pot gst-pot--${state} gst-pot--${cookware.id} ${recipeClass} ${stepClass} ${pakbetCookingClass} ${calderetaCookingClass} ${recipeStepClass}`.trim()}
               initial={{ y: -60, opacity: 0, scale: 0.7 }}
               animate={{ y: 0, opacity: 1, scale: 1 }}
               exit={{ y: -40, opacity: 0 }}
@@ -545,6 +577,14 @@ export default function StoveView({ onClose, onFinishCooking, selectedRecipe }: 
                     onClick={() => setHeatLevel(h)}>{h}</button>
                 ))}
               </div>
+  
+              {isPasta && currentStepImage?.includes('11-seasons-with-salt-and-pepper') && state !== 'done' && state !== 'burnt' && (
+                <motion.button className="g-btn g-btn--gold" style={{ padding: '8px 16px', fontSize: 14 }}
+                  onClick={() => setCurrentStepImage('/assets/COOKING PART/16-pasta/12-place-the-pasta-on-serving-plate.png')}
+                  initial={{ scale: 0 }} animate={{ scale: 1 }} whileTap={{ scale: 0.95 }}>
+                  Add Sauce
+                </motion.button>
+              )}
   
               {(state === 'done' || state === 'burnt') && (
                 <motion.button

@@ -356,21 +356,6 @@ export const recipes: Recipe[] = [
       "Salt",
       "Pepper"
     ],
-    "chronologicalSteps": [
-      "Cooking oil",
-      "Onion",
-      "Celery",
-      "Garlic",
-      "Chicken breast",
-      "Chicken broth",
-      "tool:ladle",
-      "Carrot",
-      "Egg noodles",
-      "tool:spoon",
-      "Salt",
-      "Pepper",
-      "Parsley"
-    ],
     "tools": [
       "cboard",
       "chefs",
@@ -472,16 +457,15 @@ export const recipes: Recipe[] = [
       "Pepper"
     ],
     "chronologicalSteps": [
-      "Butter",
+      "Cooking oil",
       "Onion",
+      "Celery",
       "Garlic",
-      "Butternut squash",
-      "Vegetable broth",
-      "tool:spoon",
-      "Cream",
-      "tool:ladle",
-      "Salt",
-      "Pepper"
+      "Chicken breast",
+      "Chicken broth",
+      "Carrot",
+      "Egg noodles",
+      "Salt"
     ],
     "tools": [
       "cboard",
@@ -573,14 +557,11 @@ export const recipes: Recipe[] = [
     "chronologicalSteps": [
       "Butter",
       "Onion",
-      "Garlic",
-      "Tomato",
-      "Vegetable broth",
-      "tool:spoon",
-      "Cream",
-      "tool:ladle",
-      "Salt",
-      "Pepper"
+      "Potatoes",
+      "Corn kernels",
+      "Chicken broth",
+      "Milk",
+      "Salt"
     ],
     "tools": [
       "cboard",
@@ -676,14 +657,10 @@ export const recipes: Recipe[] = [
     "chronologicalSteps": [
       "Butter",
       "Onion",
-      "Potatoes",
-      "Corn kernels",
-      "Chicken broth",
-      "tool:spoon",
-      "Milk",
-      "tool:ladle",
-      "Salt",
-      "Pepper"
+      "Garlic",
+      "Butternut squash",
+      "Vegetable broth",
+      "Cream"
     ],
     "tools": [
       "cboard",
@@ -773,16 +750,14 @@ export const recipes: Recipe[] = [
       "Peppercorns"
     ],
     "chronologicalSteps": [
-      "Cooking oil",
       "Chicken",
       "Soy sauce",
       "Garlic",
-      "tool:spoon",
+      "Cooking oil",
       "Water",
       "Vinegar",
       "Bay leaves",
-      "Peppercorns",
-      "tool:ladle"
+      "Peppercorns"
     ],
     "tools": [
       "cboard",
@@ -1099,20 +1074,6 @@ export const recipes: Recipe[] = [
       "Salt",
       "Pepper"
     ],
-    "chronologicalSteps": [
-      "Cooking oil",
-      "Garlic",
-      "Onion",
-      "Beef",
-      "Tomato sauce",
-      "Water",
-      "Potatoes",
-      "Carrot",
-      "Liver spread",
-      "Bell pepper",
-      "Salt",
-      "Pepper"
-    ],
     "tools": [
       "cboard",
       "chefs",
@@ -1216,7 +1177,6 @@ export const recipes: Recipe[] = [
     "tools": [
       "cboard",
       "chefs",
-      "frypan",
       "saucepan",
       "spoon",
       "tongs"
@@ -1475,7 +1435,7 @@ export const recipes: Recipe[] = [
     "ingredients": [
       "Pasta",
       "Ground pork",
-      "Spag sauce",
+      "Spaghetti sauce",
       "Onion",
       "Garlic",
       "Cooking oil",
@@ -1496,11 +1456,12 @@ export const recipes: Recipe[] = [
     "chronologicalSteps": [
       "Water",
       "Pasta",
+      "tool:frypan",
       "Cooking oil",
       "Garlic",
       "Onion",
-      "Ground beef",
-      "Tomato sauce"
+      "Ground pork",
+      "Spaghetti sauce"
     ],
     "steps": [
       "Cook pasta according to package directions",
@@ -1684,7 +1645,8 @@ export const recipes: Recipe[] = [
       "cboard",
       "chefs",
       "pot",
-      "spoon"
+      "spoon",
+      "mallet"
     ],
     "chronologicalSteps": [
       "Beef",
