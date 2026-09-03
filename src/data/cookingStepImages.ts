@@ -2,7 +2,6 @@ export interface CookingStepImageSet {
   steps: string[]
   done?: string
   burnt?: string
-  burning?: string
 }
 
 export const COOKING_STEP_IMAGES: Record<number, CookingStepImageSet> = {
@@ -61,7 +60,8 @@ export const COOKING_STEP_IMAGES: Record<number, CookingStepImageSet> = {
     ],
     done: '/assets/COOKING PART/4-hollandaise/step-5.png'
   },
-  5: {
+  5: { steps: [] },
+  6: {
     steps: [
       '/assets/COOKING PART/6-chicken-noodle-soup/1-add-cooking-oil.png',
       '/assets/COOKING PART/6-chicken-noodle-soup/2-add-onion.png',
@@ -69,96 +69,61 @@ export const COOKING_STEP_IMAGES: Record<number, CookingStepImageSet> = {
       '/assets/COOKING PART/6-chicken-noodle-soup/4-add-garlic.png',
       '/assets/COOKING PART/6-chicken-noodle-soup/5-add-chicken-pieces.png',
       '/assets/COOKING PART/6-chicken-noodle-soup/6-pour-the-chicken-broth.png',
-      '/assets/COOKING PART/6-chicken-noodle-soup/7-ladle.png',       // tool:ladle
       '/assets/COOKING PART/6-chicken-noodle-soup/8-add-sliced-carrot.png',
       '/assets/COOKING PART/6-chicken-noodle-soup/9-stir-in-the-egg-noodles.png',
-      '/assets/COOKING PART/6-chicken-noodle-soup/9-stir-in-the-egg-noodles.png', // tool:spoon
-      '/assets/COOKING PART/6-chicken-noodle-soup/9-stir-in-the-egg-noodles.png', // Salt
-      '/assets/COOKING PART/6-chicken-noodle-soup/9-stir-in-the-egg-noodles.png', // Pepper
-      '/assets/COOKING PART/6-chicken-noodle-soup/9-stir-in-the-egg-noodles.png'  // Parsley
+      '/assets/COOKING PART/6-chicken-noodle-soup/9-stir-in-the-egg-noodles.png'
     ],
-    done: '/assets/COOKING PART/6-chicken-noodle-soup/9-stir-in-the-egg-noodles.png',
+    done: '/assets/COOKING PART/6-chicken-noodle-soup/7-ladle.png',
     burnt: '/assets/COOKING PART/6-chicken-noodle-soup/10-overcooked.png'
   },
-  // recipe id 6 = Butternut Squash Soup (uses 8-butternut-squash-soup folder)
-  6: {
-    steps: [
-      '/assets/COOKING PART/8-butternut-squash-soup/step-1-1.png', // Butter
-      '/assets/COOKING PART/8-butternut-squash-soup/step-2.png',   // Onion
-      '/assets/COOKING PART/8-butternut-squash-soup/step-3.png',   // Garlic
-      '/assets/COOKING PART/8-butternut-squash-soup/step-4.png',   // Butternut squash
-      '/assets/COOKING PART/8-butternut-squash-soup/step-5.png',   // Vegetable broth
-      '/assets/COOKING PART/8-butternut-squash-soup/step-5.png',   // tool:spoon
-      '/assets/COOKING PART/8-butternut-squash-soup/step-6.png',   // Cream
-      '/assets/COOKING PART/8-butternut-squash-soup/step-6.png',   // tool:ladle
-      '/assets/COOKING PART/8-butternut-squash-soup/step-6.png',   // Salt
-      '/assets/COOKING PART/8-butternut-squash-soup/step-6.png'    // Pepper
-    ],
-    done: '/assets/COOKING PART/8-butternut-squash-soup/step-6.png'
-  },
-  // recipe id 7 = Tomato Soup (5-tomato-soup folder — currently empty, will update when assets arrive)
   7: {
     steps: [
-      '/assets/COOKING PART/3-tomato-sauce/1-heat-olive-oil.png',  // Butter
-      '/assets/COOKING PART/3-tomato-sauce/2-cook-the-onion.png',  // Onion
-      '/assets/COOKING PART/3-tomato-sauce/3-add-the-garlic.png',  // Garlic
-      '/assets/COOKING PART/3-tomato-sauce/4-crushed-tomatoes.png', // Tomato
-      '/assets/COOKING PART/3-tomato-sauce/4-crushed-tomatoes.png', // Vegetable broth
-      '/assets/COOKING PART/3-tomato-sauce/7-cook-the-sauce.png',  // tool:spoon
-      '/assets/COOKING PART/3-tomato-sauce/5-add-salt-and-pepper.png', // Cream
-      '/assets/COOKING PART/3-tomato-sauce/6-whisk.png',           // tool:ladle
-      '/assets/COOKING PART/3-tomato-sauce/5-add-salt-and-pepper.png', // Salt
-      '/assets/COOKING PART/3-tomato-sauce/5-add-salt-and-pepper.png'  // Pepper
+      '/assets/COOKING PART/7-corn-cowder-soup/step-1.png',
+      '/assets/COOKING PART/7-corn-cowder-soup/step-2.png',
+      '/assets/COOKING PART/7-corn-cowder-soup/step-3.png',
+      '/assets/COOKING PART/7-corn-cowder-soup/step-4.png',
+      '/assets/COOKING PART/7-corn-cowder-soup/step-5.png',
+      '/assets/COOKING PART/7-corn-cowder-soup/step-6.png',
+      '/assets/COOKING PART/7-corn-cowder-soup/step-6.png'
     ],
-    done: '/assets/COOKING PART/3-tomato-sauce/8-good.png',
-    burnt: '/assets/COOKING PART/3-tomato-sauce/9-burnt.png'
+    done: '/assets/COOKING PART/7-corn-cowder-soup/step-7.png'
   },
-  // recipe id 8 = Corn Chowder (uses 7-corn-chowder-soup folder)
   8: {
     steps: [
-      '/assets/COOKING PART/7-corn-chowder-soup/step-1.png', // Butter
-      '/assets/COOKING PART/7-corn-chowder-soup/step-2.png', // Onion
-      '/assets/COOKING PART/7-corn-chowder-soup/step-3.png', // Potatoes
-      '/assets/COOKING PART/7-corn-chowder-soup/step-4.png', // Corn kernels
-      '/assets/COOKING PART/7-corn-chowder-soup/step-5.png', // Chicken broth
-      '/assets/COOKING PART/7-corn-chowder-soup/step-5.png', // tool:spoon
-      '/assets/COOKING PART/7-corn-chowder-soup/step-6.png', // Milk
-      '/assets/COOKING PART/7-corn-chowder-soup/step-6.png', // tool:ladle
-      '/assets/COOKING PART/7-corn-chowder-soup/step-7.png', // Salt
-      '/assets/COOKING PART/7-corn-chowder-soup/step-7.png'  // Pepper
-    ],
-    done: '/assets/COOKING PART/7-corn-chowder-soup/step-7.png'
+      '/assets/COOKING PART/8-butternut-squash-soup/step-1-1.png',
+      '/assets/COOKING PART/8-butternut-squash-soup/step-2.png',
+      '/assets/COOKING PART/8-butternut-squash-soup/step-3.png',
+      '/assets/COOKING PART/8-butternut-squash-soup/step-4.png',
+      '/assets/COOKING PART/8-butternut-squash-soup/step-5.png',
+      '/assets/COOKING PART/8-butternut-squash-soup/step-6.png'
+    ]
   },
   9: {
     steps: [
-      '/assets/COOKING PART/9-adobo/5-add-oil.png',                    // Cooking oil
-      '/assets/COOKING PART/9-adobo/6-put-the-marinated-chicken.png',  // Chicken
-      '/assets/COOKING PART/9-adobo/7-put-the-marinated-soysauce.png', // Soy sauce
-      '/assets/COOKING PART/9-adobo/7-put-the-marinated-soysauce.png', // Garlic (no image change)
-      '/assets/COOKING PART/9-adobo/7-put-the-marinated-soysauce.png', // tool:spoon (stays)
-      '/assets/COOKING PART/9-adobo/8-add-water.png',                  // Water
-      '/assets/COOKING PART/9-adobo/9-add-vinegar.png',                // Vinegar
-      '/assets/COOKING PART/9-adobo/10-add-bay-leaf.png',              // Bay leaves
-      '/assets/COOKING PART/9-adobo/11-pepper.png',                    // Peppercorns
-      '/assets/COOKING PART/9-adobo/12-simmer.png'                     // tool:ladle
+      '/assets/COOKING PART/9-adobo/2-put-the-chicken.png',
+      '/assets/COOKING PART/9-adobo/3-add-soysauce.png',
+      '/assets/COOKING PART/9-adobo/4-add-garlic.png',
+      '/assets/COOKING PART/9-adobo/5-add-oil.png',
+      '/assets/COOKING PART/9-adobo/8-add-water.png',
+      '/assets/COOKING PART/9-adobo/9-add-vinegar.png',
+      '/assets/COOKING PART/9-adobo/10-add-bay-leaf.png',
+      '/assets/COOKING PART/9-adobo/11-pepper.png'
     ],
     done: '/assets/COOKING PART/9-adobo/good.png',
-    burnt: '/assets/COOKING PART/9-adobo/burnt.png',
-    burning: '/assets/COOKING PART/9-adobo/13-burnt.png'
+    burnt: '/assets/COOKING PART/9-adobo/burnt.png'
   },
-
   10: {
     steps: [
-      '/assets/COOKING PART/10-sinigang/1.png',           // Pork belly
-      '/assets/COOKING PART/10-sinigang/2.png',           // Water
-      '/assets/COOKING PART/10-sinigang/3.png',           // Onion
-      '/assets/COOKING PART/10-sinigang/4.png',           // Tomato
-      '/assets/COOKING PART/10-sinigang/5.png',           // Radish
-      '/assets/COOKING PART/10-sinigang/6.png',           // Sitaw
-      '/assets/COOKING PART/10-sinigang/6.png',           // Sinigang mix (no image change, remains on previous image)
-      '/assets/COOKING PART/10-sinigang/8-kangkong.png'    // Kangkong (changes to next image)
+      '/assets/COOKING PART/10-sinigang/1.png',
+      '/assets/COOKING PART/10-sinigang/2.png',
+      '/assets/COOKING PART/10-sinigang/3.png',
+      '/assets/COOKING PART/10-sinigang/4.png',
+      '/assets/COOKING PART/10-sinigang/5.png',
+      '/assets/COOKING PART/10-sinigang/6.png',
+      '/assets/COOKING PART/10-sinigang/pork-sinigang.png',
+      '/assets/COOKING PART/10-sinigang/8-kangkong.png'
     ],
-    done: '/assets/COOKING PART/10-sinigang/8.sinigangDone.png'
+    done: '/assets/COOKING PART/10-sinigang/8-done'
   },
   11: {
     steps: [
@@ -167,23 +132,7 @@ export const COOKING_STEP_IMAGES: Record<number, CookingStepImageSet> = {
       '/assets/COOKING PART/11-pakbet/step-4-1.png'
     ]
   },
-  12: {
-    steps: [
-      '/assets/COOKING PART/15. BEEF CALDERETA/1  Add cooking oil.png',        // Cooking oil
-      '/assets/COOKING PART/15. BEEF CALDERETA/Step 2  Sauté the aromatics_.png', // Garlic
-      '/assets/COOKING PART/15. BEEF CALDERETA/Step 2  Sauté the aromatics_.png', // Onion
-      '/assets/COOKING PART/15. BEEF CALDERETA/Step 3_ Brown the beef_.png',      // Beef
-      '/assets/COOKING PART/15. BEEF CALDERETA/Step 4_ Add the sauce_.png',       // Tomato sauce
-      '/assets/COOKING PART/15. BEEF CALDERETA/Step 5_ Simmer the beef_.png',     // Water
-      '/assets/COOKING PART/15. BEEF CALDERETA/Step 6_ Add the vegetables_.png',  // Potatoes
-      '/assets/COOKING PART/15. BEEF CALDERETA/Step 6_ Add the vegetables_.png',  // Carrot
-      '/assets/COOKING PART/15. BEEF CALDERETA/Step 7_ Finish the dish_.png',     // Liver spread
-      '/assets/COOKING PART/15. BEEF CALDERETA/Step 7_ Finish the dish_.png',     // Bell pepper
-      '/assets/COOKING PART/15. BEEF CALDERETA/Step 7_ Finish the dish_.png',     // Salt
-      '/assets/COOKING PART/15. BEEF CALDERETA/Step 7_ Finish the dish_.png'      // Pepper
-    ],
-    done: '/assets/COOKING PART/15. BEEF CALDERETA/Step 8_ Serve_.png'
-  },
+  12: { steps: [] },
   13: {
     steps: [
       '/assets/COOKING PART/13-fish-escabeche/step-1.png',
@@ -198,24 +147,27 @@ export const COOKING_STEP_IMAGES: Record<number, CookingStepImageSet> = {
   },
   14: {
     steps: [
-      '/assets/COOKING PART/14-bulalo/step-1.png',
-      '/assets/COOKING PART/14-bulalo/step-2.png',
-      '/assets/COOKING PART/14-bulalo/step-3.png',
-      '/assets/COOKING PART/14-bulalo/step-4.png',
-      '/assets/COOKING PART/14-bulalo/step-5.png',
-      '/assets/COOKING PART/14-bulalo/step-6.png'
-    ]
+      '/assets/COOKING PART/14-bulalo/step2.png',
+      '/assets/COOKING PART/14-bulalo/step3.png',
+      '/assets/COOKING PART/14-bulalo/step4.png',
+      '/assets/COOKING PART/14-bulalo/step5.png',
+      '/assets/COOKING PART/14-bulalo/step5.png',
+      '/assets/COOKING PART/14-bulalo/step5.png'
+    ],
+    done: '/assets/COOKING PART/14-bulalo/step6.png'
   },
   15: { steps: [] },
   16: {
     steps: [
       '/assets/COOKING PART/16-pasta/2-boil-the-water.png',
       '/assets/COOKING PART/16-pasta/3-add-the-pasta.png',
+      '/assets/COOKING PART/16-pasta/5-prepare-the-frying-pan.png',
       '/assets/COOKING PART/16-pasta/6-heat-the-oil.png',
       '/assets/COOKING PART/16-pasta/7-saute-the-garlic.png',
       '/assets/COOKING PART/16-pasta/8-add-the-onion.png',
       '/assets/COOKING PART/16-pasta/9-add-the-ground-meat.png',
-      '/assets/COOKING PART/16-pasta/10-pour-the-spaghetti-sauce.png'
+      '/assets/COOKING PART/16-pasta/10-pour-the-spaghetti-sauce.png',
+      '/assets/COOKING PART/16-pasta/11-seasons-with-salt-and-pepper.png'
     ],
     done: '/assets/COOKING PART/16-pasta/13-combine-the-sauce-to-the-pasta.png'
   },
@@ -233,15 +185,15 @@ export const COOKING_STEP_IMAGES: Record<number, CookingStepImageSet> = {
   },
   18: {
     steps: [
-      '/assets/COOKING PART/18-beef-morcon/1-beef.png',
-      '/assets/COOKING PART/18-beef-morcon/3-add-carrot-strips.png',
-      '/assets/COOKING PART/18-beef-morcon/4-add-hotdogs.png',
-      '/assets/COOKING PART/18-beef-morcon/5-add-pickle-relish.png',
-      '/assets/COOKING PART/18-beef-morcon/6-add-sliced-egg.png',
-      '/assets/COOKING PART/18-beef-morcon/8-heat-the-oil.png'
+      '/assets/COOKING PART/18-beef-morcon/beef-morcon/2-prepare-the-beef.png',
+      '/assets/COOKING PART/18-beef-morcon/beef-morcon/3-add-carrot-strips.png',
+      '/assets/COOKING PART/18-beef-morcon/beef-morcon/4-add-hotdogs.png',
+      '/assets/COOKING PART/18-beef-morcon/beef-morcon/5-add-pickle-relish.png',
+      '/assets/COOKING PART/18-beef-morcon/beef-morcon/6-add-sliced-egg.png',
+      '/assets/COOKING PART/18-beef-morcon/beef-morcon/7-roll-and-secure.png'
     ],
-    done: '/assets/COOKING PART/18-beef-morcon/16-serve.png',
-    burnt: '/assets/COOKING PART/18-beef-morcon/burn-version.png'
+    done: '/assets/COOKING PART/18-beef-morcon/beef-morcon/16-serve.png',
+    burnt: '/assets/COOKING PART/18-beef-morcon/beef-morcon/burn-version.png'
   },
   19: { steps: [] },
 }

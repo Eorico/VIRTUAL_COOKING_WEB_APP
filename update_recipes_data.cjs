@@ -181,26 +181,29 @@ const RECIPE_STEPS = {
   14: { // Bulalo
     steps: ["Beef shank", "Water", "Onion", "Corn", "Peppercorns", "Cabbage"],
     images: [
-      '/assets/COOKING PART/14-bulalo/step-1.png',
-      '/assets/COOKING PART/14-bulalo/step-2.png',
-      '/assets/COOKING PART/14-bulalo/step-3.png',
-      '/assets/COOKING PART/14-bulalo/step-4.png',
-      '/assets/COOKING PART/14-bulalo/step-5.png',
-      '/assets/COOKING PART/14-bulalo/step-6.png'
-    ]
+      '/assets/COOKING PART/14-bulalo/step2.png',
+      '/assets/COOKING PART/14-bulalo/step3.png',
+      '/assets/COOKING PART/14-bulalo/step4.png',
+      '/assets/COOKING PART/14-bulalo/step5.png',
+      '/assets/COOKING PART/14-bulalo/step5.png',
+      '/assets/COOKING PART/14-bulalo/step5.png'
+    ],
+    done: '/assets/COOKING PART/14-bulalo/step6.png'
   },
   16: { // Pasta
     steps: [
-      "Water", "Pasta", "Cooking oil", "Garlic", "Onion", "Ground beef", "Tomato sauce"
+      "Water", "Pasta", "tool:frypan", "Cooking oil", "Garlic", "Onion", "Ground pork", "Spag sauce"
     ],
     images: [
       '/assets/COOKING PART/16-pasta/2-boil-the-water.png',
       '/assets/COOKING PART/16-pasta/3-add-the-pasta.png',
+      '/assets/COOKING PART/16-pasta/5-prepare-the-frying-pan.png',
       '/assets/COOKING PART/16-pasta/6-heat-the-oil.png',
       '/assets/COOKING PART/16-pasta/7-saute-the-garlic.png',
       '/assets/COOKING PART/16-pasta/8-add-the-onion.png',
       '/assets/COOKING PART/16-pasta/9-add-the-ground-meat.png',
-      '/assets/COOKING PART/16-pasta/10-pour-the-spaghetti-sauce.png'
+      '/assets/COOKING PART/16-pasta/10-pour-the-spaghetti-sauce.png',
+      '/assets/COOKING PART/16-pasta/11-seasons-with-salt-and-pepper.png'
     ],
     done: '/assets/COOKING PART/16-pasta/13-combine-the-sauce-to-the-pasta.png'
   },
@@ -220,15 +223,15 @@ const RECIPE_STEPS = {
   18: { // Beef Morcon
     steps: ["Beef", "Carrot", "Hotdog", "Pickle", "Egg", "Cooking oil"],
     images: [
-      '/assets/COOKING PART/18-beef-morcon/1-beef.png',
-      '/assets/COOKING PART/18-beef-morcon/3-add-carrot-strips.png',
-      '/assets/COOKING PART/18-beef-morcon/4-add-hotdogs.png',
-      '/assets/COOKING PART/18-beef-morcon/5-add-pickle-relish.png',
-      '/assets/COOKING PART/18-beef-morcon/6-add-sliced-egg.png',
-      '/assets/COOKING PART/18-beef-morcon/8-heat-the-oil.png'
+      '/assets/COOKING PART/18-beef-morcon/beef-morcon/2-prepare-the-beef.png',
+      '/assets/COOKING PART/18-beef-morcon/beef-morcon/3-add-carrot-strips.png',
+      '/assets/COOKING PART/18-beef-morcon/beef-morcon/4-add-hotdogs.png',
+      '/assets/COOKING PART/18-beef-morcon/beef-morcon/5-add-pickle-relish.png',
+      '/assets/COOKING PART/18-beef-morcon/beef-morcon/6-add-sliced-egg.png',
+      '/assets/COOKING PART/18-beef-morcon/beef-morcon/7-roll-and-secure.png'
     ],
-    done: '/assets/COOKING PART/18-beef-morcon/16-serve.png',
-    burnt: '/assets/COOKING PART/18-beef-morcon/burn-version.png'
+    done: '/assets/COOKING PART/18-beef-morcon/beef-morcon/16-serve.png',
+    burnt: '/assets/COOKING PART/18-beef-morcon/beef-morcon/burn-version.png'
   }
 };
 

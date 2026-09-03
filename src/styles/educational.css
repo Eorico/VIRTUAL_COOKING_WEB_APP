@@ -3807,6 +3807,36 @@
   top: 43%;        /* ← Adjust Beef Caldereta vertical position (up/down) */
 }
 
+/* ── BEEF MORCON SPECIFIC COOKING STEP POSITIONING (Steps 2-7) ──────── */
+.gst-pot.gst-pot--morcon-step-2 { width: 220px; left: 55%; top: 46%; }
+.gst-pot.gst-pot--morcon-step-3 { width: 220px; left: 55%; top: 46%; }
+.gst-pot.gst-pot--morcon-step-4 { width: 220px; left: 55%; top: 46%; }
+.gst-pot.gst-pot--morcon-step-5 { width: 220px; left: 55%; top: 46%; }
+.gst-pot.gst-pot--morcon-step-6 { width: 220px; left: 55%; top: 46%; }
+.gst-pot.gst-pot--morcon-step-7 { width: 220px; left: 55%; top: 46%; }
+
+/* ── KING RANCH CHICKEN SPECIFIC COOKING STEP POSITIONING (Steps 1-7) ──────── */
+.gst-pot.gst-pot--king-ranch-step-1 { width: 260px; left: 55%; top: 50%; }
+.gst-pot.gst-pot--king-ranch-step-2 { width: 260px; left: 55%; top: 50%; }
+.gst-pot.gst-pot--king-ranch-step-3 { width: 260px; left: 55%; top: 50%; }
+.gst-pot.gst-pot--king-ranch-step-4 { width: 260px; left: 55%; top: 50%; }
+.gst-pot.gst-pot--king-ranch-step-5 { width: 260px; left: 55%; top: 50%; }
+.gst-pot.gst-pot--king-ranch-step-6 { width: 260px; left: 55%; top: 50%; }
+.gst-pot.gst-pot--king-ranch-step-7 { width: 260px; left: 55%; top: 50%; }
+
+/* ── PASTA SPECIFIC COOKING STEP POSITIONING ──────── */
+.gst-pot.gst-pot--pasta-large-pot { width: 230px; left: 55%; top: 42%; }
+.gst-pot.gst-pot--pasta-fry-pan { width: 320px; left: 53%; top: 51.8%; }
+.gst-pot.gst-pot--pasta-step-11 { width: 320px; left: 53%; top: 51.8%; }
+.gst-pot.gst-pot--pasta-step-12 { width: 320px; left: 53%; top: 51.8%; }
+
+/* ── BULALO SPECIFIC COOKING STEP POSITIONING ──────── */
+.gst-pot.gst-pot--bulalo-step-2 { width: 210px; left: 55%; top: 45%; }
+.gst-pot.gst-pot--bulalo-step-3 { width: 210px; left: 55%; top: 45%; }
+.gst-pot.gst-pot--bulalo-step-4 { width: 210px; left: 55%; top: 45%; }
+.gst-pot.gst-pot--bulalo-step-5 { width: 210px; left: 55%; top: 45%; }
+.gst-pot.gst-pot--bulalo-step-6 { width: 210px; left: 55%; top: 45%; }
+
 
 .gst-pot-img {
   width: 100%;

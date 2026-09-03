@@ -34,6 +34,28 @@ export const recipes: Recipe[] = [
       "Pepper",
       "tool:spoon"
     ],
+    "chronologicalSteps": [
+      "Butter",
+      "Flour",
+      "tool:whisk",
+      "Milk",
+      "tool:whisk",
+      "tool:whisk",
+      "Salt",
+      "Pepper",
+      "tool:spoon"
+    ],
+    "chronologicalSteps": [
+      "Butter",
+      "Flour",
+      "tool:whisk",
+      "Milk",
+      "tool:whisk",
+      "tool:whisk",
+      "Salt",
+      "Pepper",
+      "tool:spoon"
+    ],
     "tools": [
       "saucepan",
       "whisk",
@@ -98,6 +120,32 @@ export const recipes: Recipe[] = [
       "Flour",
       "Tomato paste",
       "Beef stock"
+    ],
+    "chronologicalSteps": [
+      "Butter",
+      "Carrot",
+      "Onion",
+      "Celery",
+      "Flour",
+      "tool:whisk",
+      "Tomato paste",
+      "Beef stock",
+      "tool:whisk",
+      "tool:spoon",
+      "tool:ladle"
+    ],
+    "chronologicalSteps": [
+      "Butter",
+      "Carrot",
+      "Onion",
+      "Celery",
+      "Flour",
+      "tool:whisk",
+      "Tomato paste",
+      "Beef stock",
+      "tool:whisk",
+      "tool:spoon",
+      "tool:ladle"
     ],
     "chronologicalSteps": [
       "Butter",
@@ -204,6 +252,24 @@ export const recipes: Recipe[] = [
       "tool:whisk",
       "tool:spoon"
     ],
+    "chronologicalSteps": [
+      "Olive oil",
+      "Onion",
+      "Garlic",
+      "Tomato",
+      "Salt",
+      "tool:whisk",
+      "tool:spoon"
+    ],
+    "chronologicalSteps": [
+      "Olive oil",
+      "Onion",
+      "Garlic",
+      "Tomato",
+      "Salt",
+      "tool:whisk",
+      "tool:spoon"
+    ],
     "tools": [
       "saucepan",
       "whisk",
@@ -278,6 +344,20 @@ export const recipes: Recipe[] = [
     ],
     "chronologicalIngredients": [
       "Egg yolks",
+      "Butter",
+      "Lemon juice",
+      "Salt"
+    ],
+    "chronologicalSteps": [
+      "Egg yolks",
+      "tool:whisk",
+      "Butter",
+      "Lemon juice",
+      "Salt"
+    ],
+    "chronologicalSteps": [
+      "Egg yolks",
+      "tool:whisk",
       "Butter",
       "Lemon juice",
       "Salt"
@@ -472,6 +552,28 @@ export const recipes: Recipe[] = [
       "Pepper"
     ],
     "chronologicalSteps": [
+      "Cooking oil",
+      "Onion",
+      "Celery",
+      "Garlic",
+      "Chicken breast",
+      "Chicken broth",
+      "Carrot",
+      "Egg noodles",
+      "Salt"
+    ],
+    "chronologicalSteps": [
+      "Cooking oil",
+      "Onion",
+      "Celery",
+      "Garlic",
+      "Chicken breast",
+      "Chicken broth",
+      "Carrot",
+      "Egg noodles",
+      "Salt"
+    ],
+    "chronologicalSteps": [
       "Butter",
       "Onion",
       "Garlic",
@@ -569,6 +671,24 @@ export const recipes: Recipe[] = [
       "Cream",
       "Salt",
       "Pepper"
+    ],
+    "chronologicalSteps": [
+      "Butter",
+      "Onion",
+      "Potatoes",
+      "Corn kernels",
+      "Chicken broth",
+      "Milk",
+      "Salt"
+    ],
+    "chronologicalSteps": [
+      "Butter",
+      "Onion",
+      "Potatoes",
+      "Corn kernels",
+      "Chicken broth",
+      "Milk",
+      "Salt"
     ],
     "chronologicalSteps": [
       "Butter",
@@ -676,6 +796,22 @@ export const recipes: Recipe[] = [
     "chronologicalSteps": [
       "Butter",
       "Onion",
+      "Garlic",
+      "Butternut squash",
+      "Vegetable broth",
+      "Cream"
+    ],
+    "chronologicalSteps": [
+      "Butter",
+      "Onion",
+      "Garlic",
+      "Butternut squash",
+      "Vegetable broth",
+      "Cream"
+    ],
+    "chronologicalSteps": [
+      "Butter",
+      "Onion",
       "Potatoes",
       "Corn kernels",
       "Chicken broth",
@@ -773,6 +909,26 @@ export const recipes: Recipe[] = [
       "Peppercorns"
     ],
     "chronologicalSteps": [
+      "Chicken",
+      "Soy sauce",
+      "Garlic",
+      "Cooking oil",
+      "Water",
+      "Vinegar",
+      "Bay leaves",
+      "Peppercorns"
+    ],
+    "chronologicalSteps": [
+      "Chicken",
+      "Soy sauce",
+      "Garlic",
+      "Cooking oil",
+      "Water",
+      "Vinegar",
+      "Bay leaves",
+      "Peppercorns"
+    ],
+    "chronologicalSteps": [
       "Cooking oil",
       "Chicken",
       "Soy sauce",
@@ -857,6 +1013,26 @@ export const recipes: Recipe[] = [
       "Water"
     ],
     "chronologicalIngredients": [
+      "Pork belly",
+      "Water",
+      "Onion",
+      "Tomato",
+      "Radish",
+      "Sitaw",
+      "Sinigang mix",
+      "Kangkong"
+    ],
+    "chronologicalSteps": [
+      "Pork belly",
+      "Water",
+      "Onion",
+      "Tomato",
+      "Radish",
+      "Sitaw",
+      "Sinigang mix",
+      "Kangkong"
+    ],
+    "chronologicalSteps": [
       "Pork belly",
       "Water",
       "Onion",
@@ -979,6 +1155,16 @@ export const recipes: Recipe[] = [
       "Eggplant",
       "Ampalaya",
       "Water"
+    ],
+    "chronologicalSteps": [
+      "Cooking oil",
+      "Garlic",
+      "Onion"
+    ],
+    "chronologicalSteps": [
+      "Cooking oil",
+      "Garlic",
+      "Onion"
     ],
     "chronologicalSteps": [
       "Cooking oil",
@@ -1230,6 +1416,26 @@ export const recipes: Recipe[] = [
       "Bell pepper",
       "Carrot"
     ],
+    "chronologicalSteps": [
+      "Fish",
+      "Salt",
+      "Cooking oil",
+      "Onion",
+      "Garlic",
+      "Ginger",
+      "Bell pepper",
+      "Carrot"
+    ],
+    "chronologicalSteps": [
+      "Fish",
+      "Salt",
+      "Cooking oil",
+      "Onion",
+      "Garlic",
+      "Ginger",
+      "Bell pepper",
+      "Carrot"
+    ],
     "steps": [
       "Clean and score the fish",
       "Fry fish until golden brown and set aside",
@@ -1317,6 +1523,22 @@ export const recipes: Recipe[] = [
       "pot",
       "ladle",
       "mcup"
+    ],
+    "chronologicalSteps": [
+      "Beef shank",
+      "Water",
+      "Onion",
+      "Corn",
+      "Peppercorns",
+      "Cabbage"
+    ],
+    "chronologicalSteps": [
+      "Beef shank",
+      "Water",
+      "Onion",
+      "Corn",
+      "Peppercorns",
+      "Cabbage"
     ],
     "chronologicalSteps": [
       "Beef shank",
@@ -1505,6 +1727,26 @@ export const recipes: Recipe[] = [
     "chronologicalSteps": [
       "Water",
       "Pasta",
+      "tool:frypan",
+      "Cooking oil",
+      "Garlic",
+      "Onion",
+      "Ground pork",
+      "Spag sauce"
+    ],
+    "chronologicalSteps": [
+      "Water",
+      "Pasta",
+      "tool:frypan",
+      "Cooking oil",
+      "Garlic",
+      "Onion",
+      "Ground beef",
+      "Tomato sauce"
+    ],
+    "chronologicalSteps": [
+      "Water",
+      "Pasta",
       "Cooking oil",
       "Garlic",
       "Onion",
@@ -1590,6 +1832,22 @@ export const recipes: Recipe[] = [
       "pot",
       "spoon",
       "mcup"
+    ],
+    "chronologicalSteps": [
+      "Cooking oil",
+      "Onion",
+      "Cream of mushroom soup",
+      "Corn tortillas",
+      "Chicken",
+      "Cheese"
+    ],
+    "chronologicalSteps": [
+      "Cooking oil",
+      "Onion",
+      "Cream of mushroom soup",
+      "Corn tortillas",
+      "Chicken",
+      "Cheese"
     ],
     "chronologicalSteps": [
       "Cooking oil",
@@ -1698,7 +1956,24 @@ export const recipes: Recipe[] = [
       "cboard",
       "chefs",
       "pot",
-      "spoon"
+      "spoon",
+      "mallet"
+    ],
+    "chronologicalSteps": [
+      "Beef",
+      "Carrot",
+      "Hotdog",
+      "Pickle",
+      "Egg",
+      "Cooking oil"
+    ],
+    "chronologicalSteps": [
+      "Beef",
+      "Carrot",
+      "Hotdog",
+      "Pickle",
+      "Egg",
+      "Cooking oil"
     ],
     "chronologicalSteps": [
       "Beef",
