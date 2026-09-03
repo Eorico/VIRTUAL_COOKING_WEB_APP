@@ -192,7 +192,7 @@ const RECIPE_STEPS = {
   },
   16: { // Pasta
     steps: [
-      "Water", "Pasta", "tool:frypan", "Cooking oil", "Garlic", "Onion", "Ground pork", "Spag sauce"
+      "Water", "Pasta", "tool:frypan", "Cooking oil", "Garlic", "Onion", "Ground pork", "Spaghetti sauce"
     ],
     images: [
       '/assets/COOKING PART/16-pasta/2-boil-the-water.png',

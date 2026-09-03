@@ -55,7 +55,7 @@ export const toolCategories: ToolCategory[] = [
       { id:'tongs',     name:'Tongs',        image:'/assets/tools/tongs.png',         use:'Gripping and turning food',      bestFor:'Grilling, serving',        category:'utensil' },
       { id:'spoon',     name:'Cooking Spoon',image:'/assets/kitchen/spoon.png',       use:'Stirring and serving',           bestFor:'Soups, sauces',            category:'utensil' },
       { id:'cboard',    name:'Chopping Board',image:'/assets/kitchen/chopping-board.png',use:'Safe cutting surface',        bestFor:'All cutting tasks',        category:'utensil' },
-      { id:'mallet',    name:'Meat Mallet',  image:'/assets/tools/mallet.png',        use:'Tenderizing meat',               bestFor:'Beef, pork, poultry',      category:'utensil' },
+      { id:'mallet',    name:'Meat Mallet',  image:'/assets/tools/mallet-tenderizer.png',        use:'Tenderizing meat',               bestFor:'Beef, pork, poultry',      category:'utensil' },
     ],
   },
   {
