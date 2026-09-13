@@ -3828,7 +3828,8 @@
 .gst-pot.gst-pot--pasta-large-pot { width: 230px; left: 55%; top: 42%; }
 .gst-pot.gst-pot--pasta-fry-pan { width: 320px; left: 53%; top: 51.8%; }
 .gst-pot.gst-pot--pasta-step-11 { width: 320px; left: 53%; top: 51.8%; }
-.gst-pot.gst-pot--pasta-step-12 { width: 320px; left: 53%; top: 51.8%; }
+.gst-pot.gst-pot--pasta-step-12 { width: 320px; left: 45%; top: 51.8%; }
+.gst-pot.gst-pot--pasta-step-13 { width: 320px; left: 45%; top: 51.8%; }
 
 /* ── BULALO SPECIFIC COOKING STEP POSITIONING ──────── */
 .gst-pot.gst-pot--bulalo-step-2 { width: 210px; left: 55%; top: 45%; }

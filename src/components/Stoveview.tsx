@@ -152,6 +152,7 @@ export default function StoveView({ onClose, onFinishCooking, selectedRecipe }: 
         if (stepNum >= 1 && stepNum <= 3) recipeStepClass = 'gst-pot--pasta-large-pot';
         else if (stepNum === 11) recipeStepClass = 'gst-pot--pasta-step-11';
         else if (stepNum === 12) recipeStepClass = 'gst-pot--pasta-step-12';
+        else if (stepNum === 13) recipeStepClass = 'gst-pot--pasta-step-13';
         else if (stepNum >= 5) recipeStepClass = 'gst-pot--pasta-fry-pan';
       }
     } else if (isBulalo) {
@@ -578,9 +579,16 @@ export default function StoveView({ onClose, onFinishCooking, selectedRecipe }: 
                 ))}
               </div>
   
-              {isPasta && currentStepImage?.includes('11-seasons-with-salt-and-pepper') && state !== 'done' && state !== 'burnt' && (
+              {isPasta && currentStepImage?.includes('11-seasons-with-salt-and-pepper') && inPot.includes('Salt') && inPot.includes('Pepper') && state !== 'burnt' && (
                 <motion.button className="g-btn g-btn--gold" style={{ padding: '8px 16px', fontSize: 14 }}
                   onClick={() => setCurrentStepImage('/assets/COOKING PART/16-pasta/12-place-the-pasta-on-serving-plate.png')}
+                  initial={{ scale: 0 }} animate={{ scale: 1 }} whileTap={{ scale: 0.95 }}>
+                  Prep the noodles
+                </motion.button>
+              )}
+              {isPasta && currentStepImage?.includes('12-place-the-pasta-on-serving-plate') && state !== 'burnt' && (
+                <motion.button className="g-btn g-btn--gold" style={{ padding: '8px 16px', fontSize: 14 }}
+                  onClick={() => setCurrentStepImage('/assets/COOKING PART/16-pasta/13-combine-the-sauce-to-the-pasta.png')}
                   initial={{ scale: 0 }} animate={{ scale: 1 }} whileTap={{ scale: 0.95 }}>
                   Add Sauce
                 </motion.button>
