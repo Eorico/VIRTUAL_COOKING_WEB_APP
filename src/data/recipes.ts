@@ -1545,11 +1545,18 @@ export const recipes: Recipe[] = [
     ],
     "chronologicalSteps": [
       "Cooking oil",
+      "Garlic",
       "Onion",
-      "Cream of mushroom soup",
-      "Corn tortillas",
-      "Chicken",
-      "Cheese"
+      "Pork",
+      "tool:spoon",
+      "Tomato sauce",
+      "Water",
+      "tool:spoon",
+      "Potatoes",
+      "Carrot",
+      "Bell pepper",
+      "Salt",
+      "Pepper"
     ],
     "steps": [
       "Cut pork into cubes",

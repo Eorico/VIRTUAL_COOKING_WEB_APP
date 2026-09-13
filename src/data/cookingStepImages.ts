@@ -78,25 +78,27 @@ export const COOKING_STEP_IMAGES: Record<number, CookingStepImageSet> = {
   },
   7: {
     steps: [
-      '/assets/COOKING PART/7-corn-cowder-soup/step-1.png',
-      '/assets/COOKING PART/7-corn-cowder-soup/step-2.png',
-      '/assets/COOKING PART/7-corn-cowder-soup/step-3.png',
-      '/assets/COOKING PART/7-corn-cowder-soup/step-4.png',
-      '/assets/COOKING PART/7-corn-cowder-soup/step-5.png',
-      '/assets/COOKING PART/7-corn-cowder-soup/step-6.png',
-      '/assets/COOKING PART/7-corn-cowder-soup/step-6.png'
+      '/assets/COOKING PART/5-tomato-soup/Step 1_ Prepare the ingredients_.png',
+      '/assets/COOKING PART/5-tomato-soup/Step 2  Add cooking oil (2).png',
+      '/assets/COOKING PART/5-tomato-soup/Step 3_ Sauté the vegetables_.png',
+      '/assets/COOKING PART/5-tomato-soup/Step 4_ Cook the tomatoes_.png',
+      '/assets/COOKING PART/5-tomato-soup/Step 5_ Add broth. And Simmer_.png',
+      '/assets/COOKING PART/5-tomato-soup/Step 6_ Blend until smooth_.png'
     ],
-    done: '/assets/COOKING PART/7-corn-cowder-soup/step-7.png'
+    done: '/assets/COOKING PART/5-tomato-soup/Step 7 serve it_.png'
   },
   8: {
     steps: [
-      '/assets/COOKING PART/8-butternut-squash-soup/step-1-1.png',
-      '/assets/COOKING PART/8-butternut-squash-soup/step-2.png',
-      '/assets/COOKING PART/8-butternut-squash-soup/step-3.png',
-      '/assets/COOKING PART/8-butternut-squash-soup/step-4.png',
-      '/assets/COOKING PART/8-butternut-squash-soup/step-5.png',
-      '/assets/COOKING PART/8-butternut-squash-soup/step-6.png'
-    ]
+      '/assets/COOKING PART/7-corn-chowder-soup/Step_1 Prepare the Ingredients.png',
+      '/assets/COOKING PART/7-corn-chowder-soup/Step_2 Saute the onion with melt butter_.png',
+      '/assets/COOKING PART/7-corn-chowder-soup/Step 3-add potatoes and corn.png',
+      '/assets/COOKING PART/7-corn-chowder-soup/Step4- pour in broth.png',
+      '/assets/COOKING PART/7-corn-chowder-soup/Step5- Simmer until tender_.png',
+      '/assets/COOKING PART/7-corn-chowder-soup/Step 6- create a creamy texture_.png',
+      '/assets/COOKING PART/7-corn-chowder-soup/Step 7 -Add Milk and season.png'
+    ],
+    done: '/assets/COOKING PART/7-corn-chowder-soup/Step 8 serve it_.png',
+    burnt: '/assets/COOKING PART/7-corn-chowder-soup/Burn pan version.png'
   },
   9: {
     steps: [
@@ -156,7 +158,19 @@ export const COOKING_STEP_IMAGES: Record<number, CookingStepImageSet> = {
     ],
     done: '/assets/COOKING PART/14-bulalo/step6.png'
   },
-  15: { steps: [] },
+  15: {
+    steps: [
+      '/assets/COOKING PART/12-kare-kare/Step 1_ Prepare the ingredients_.png',
+      '/assets/COOKING PART/12-kare-kare/Step 2_ Boil the beef_.png',
+      '/assets/COOKING PART/12-kare-kare/Step 3_ Tenderize the meat_.png',
+      '/assets/COOKING PART/12-kare-kare/Step 4_ Prepare the sauce base_.png',
+      '/assets/COOKING PART/12-kare-kare/Step 5_ Add the vegetables_.png',
+      '/assets/COOKING PART/12-kare-kare/Step 6_ Add the leafy vegetables_.png',
+      '/assets/COOKING PART/12-kare-kare/Step 7_ Season and finish_.png'
+    ],
+    done: '/assets/COOKING PART/12-kare-kare/Step 8 serve it_.png',
+    burnt: '/assets/COOKING PART/12-kare-kare/burn pan version.png'
+  },
   16: {
     steps: [
       '/assets/COOKING PART/16-pasta/2-boil-the-water.png',
@@ -173,15 +187,22 @@ export const COOKING_STEP_IMAGES: Record<number, CookingStepImageSet> = {
   },
   17: {
     steps: [
-      '/assets/COOKING PART/17-king-ranch-chicken/1-heat-the-oil.png',
-      '/assets/COOKING PART/17-king-ranch-chicken/2-cook-the-onion&bell-pepper.png',
-      '/assets/COOKING PART/17-king-ranch-chicken/3-make-the-sauce.png',
-      '/assets/COOKING PART/17-king-ranch-chicken/4-place-the-tortilla.png',
-      '/assets/COOKING PART/17-king-ranch-chicken/5-add-chicken-mixture.png',
-      '/assets/COOKING PART/17-king-ranch-chicken/6-sprinkle-cheese-on-top.png'
+      '/assets/COOKING PART/19-pork-afritada/2. add oil.png',
+      '/assets/COOKING PART/19-pork-afritada/3. add garlic_.png',
+      '/assets/COOKING PART/19-pork-afritada/4. add onion_.png',
+      '/assets/COOKING PART/19-pork-afritada/5. add pork.png',
+      '/assets/COOKING PART/19-pork-afritada/6. cook the pork.png',
+      '/assets/COOKING PART/19-pork-afritada/7. add tomato sauce_.png',
+      '/assets/COOKING PART/19-pork-afritada/8. add water.png',
+      '/assets/COOKING PART/19-pork-afritada/9.  haluin.png',
+      '/assets/COOKING PART/19-pork-afritada/10 cover.png',
+      '/assets/COOKING PART/19-pork-afritada/11 add potato and carrots ( dont appear until both ingredients are put).png',
+      '/assets/COOKING PART/19-pork-afritada/12. add bell peppers_.png',
+      '/assets/COOKING PART/19-pork-afritada/13. add salt.png',
+      '/assets/COOKING PART/19-pork-afritada/14. add black pepper_.png'
     ],
-    done: '/assets/COOKING PART/17-king-ranch-chicken/serve.png',
-    burnt: '/assets/COOKING PART/17-king-ranch-chicken/serve-burn-version.png'
+    done: '/assets/COOKING PART/19-pork-afritada/15. Good Cooking_.png',
+    burnt: '/assets/COOKING PART/19-pork-afritada/16. Burnt cooking_.png'
   },
   18: {
     steps: [
