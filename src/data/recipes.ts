@@ -328,7 +328,7 @@ export const recipes: Recipe[] = [
     "name": "Chicken Noodle Soup",
     "level": 1,
     "category": "Mother Soup",
-    "image": "/assets/levels/level1/MotherSoup/Chicken Noodle Soup/chicken-noodle-soup.jpg",
+    "image": "/assets/levels/level1/MotherSoup/Chicken Noodle Soup/chicken-noodle-soup-removebg-preview.png",
     "minScore": 70,
     "cookingDuration": 90,
     "ingredients": [
@@ -433,7 +433,7 @@ export const recipes: Recipe[] = [
     "name": "Butternut Squash Soup",
     "level": 1,
     "category": "Mother Soup",
-    "image": "/assets/levels/level1/MotherSoup/Butternut Squash Soup/butternut-squash-soup.png",
+    "image": "/assets/levels/level1/MotherSoup/Butternut Squash Soup/butternut-squash-soup-removebg-preview.png",
     "minScore": 70,
     "cookingDuration": 90,
     "ingredients": [
@@ -531,7 +531,7 @@ export const recipes: Recipe[] = [
     "name": "Tomato Soup",
     "level": 1,
     "category": "Mother Soup",
-    "image": "/assets/levels/level1/MotherSoup/Tomato Soup/tomatosauce.jpg",
+    "image": "/assets/levels/level1/MotherSoup/Tomato Soup/tomatosauce-removebg-preview.png",
     "minScore": 70,
     "cookingDuration": 90,
     "ingredients": [
@@ -631,7 +631,7 @@ export const recipes: Recipe[] = [
     "name": "Corn Chowder",
     "level": 1,
     "category": "Mother Soup",
-    "image": "/assets/levels/level1/MotherSoup/Corn Crowder/creamy-corn-.png",
+    "image": "/assets/levels/level1/MotherSoup/Corn Crowder/creamy-corn--removebg-preview.png",
     "minScore": 70,
     "cookingDuration": 90,
     "ingredients": [

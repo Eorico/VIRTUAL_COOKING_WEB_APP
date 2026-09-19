@@ -60,8 +60,7 @@ export const COOKING_STEP_IMAGES: Record<number, CookingStepImageSet> = {
     ],
     done: '/assets/COOKING PART/4-hollandaise/step-5.png'
   },
-  5: { steps: [] },
-  6: {
+  5: {
     steps: [
       '/assets/COOKING PART/6-chicken-noodle-soup/1-add-cooking-oil.png',
       '/assets/COOKING PART/6-chicken-noodle-soup/2-add-onion.png',
@@ -71,11 +70,13 @@ export const COOKING_STEP_IMAGES: Record<number, CookingStepImageSet> = {
       '/assets/COOKING PART/6-chicken-noodle-soup/6-pour-the-chicken-broth.png',
       '/assets/COOKING PART/6-chicken-noodle-soup/8-add-sliced-carrot.png',
       '/assets/COOKING PART/6-chicken-noodle-soup/9-stir-in-the-egg-noodles.png',
+      '/assets/COOKING PART/6-chicken-noodle-soup/9-stir-in-the-egg-noodles.png',
       '/assets/COOKING PART/6-chicken-noodle-soup/9-stir-in-the-egg-noodles.png'
     ],
     done: '/assets/COOKING PART/6-chicken-noodle-soup/7-ladle.png',
     burnt: '/assets/COOKING PART/6-chicken-noodle-soup/10-overcooked.png'
   },
+  6: { steps: [] },
   7: {
     steps: [
       '/assets/COOKING PART/5-tomato-soup/Step 1_ Prepare the ingredients_.png',
