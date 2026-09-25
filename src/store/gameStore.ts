@@ -571,8 +571,8 @@ const useGameStore = create<GameStore>()(
           },
         ]
 
-        // Revised weights: accuracy 15%, cutting 20%, measuring 15%, cooking 35%, timing 15%
-        const total = accuracy * 0.15 + cutting * 0.20 + measuring * 0.15 + cooking * 0.35 + timing * 0.15
+        // Revised weights: accuracy 10%, washing 10%, cutting 10%, measuring 10%, cooking 50%, timing 10%
+        const total = accuracy * 0.10 + washing * 0.10 + cutting * 0.10 + measuring * 0.10 + cooking * 0.50 + timing * 0.10
         const rounded = Math.round(total)
 
         let starRating = 0
