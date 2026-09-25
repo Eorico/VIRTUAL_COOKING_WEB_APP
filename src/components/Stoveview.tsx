@@ -317,8 +317,8 @@ export default function StoveView({ onClose, onFinishCooking, selectedRecipe }: 
       setState('burnt'); setBurnedFood(true)
       setFireOn(false)
       // Show specific burning image if provided, otherwise keep current image (CSS will apply burnt filter)
-      if (stepImageSet?.burning) {
-        setCurrentStepImage(stepImageSet.burning)
+      if (stepImageSet?.burnt) {
+        setCurrentStepImage(stepImageSet.burnt)
       }
     } else if (seconds >= COOK_SECONDS && state === 'cooking') {
       setState('done')
