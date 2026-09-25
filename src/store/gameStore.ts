@@ -491,9 +491,8 @@ const useGameStore = create<GameStore>()(
         // Only ingredients that actually needed to be cooked in the pot
         const totalCookReq = s.requiredIngredients.length
         if (totalCookReq > 0) {
-          const cookedNormalized = s.cookedIngredients.map(c => c.toLowerCase().trim())
           const cookedMatchCount = s.requiredIngredients.filter(req =>
-            cookedNormalized.includes(req.name.toLowerCase().trim())
+            s.cookedIngredients.some(c => matchesIngredient(c, req.name))
           ).length
 
           // Missing ingredients severely penalize the cooking score

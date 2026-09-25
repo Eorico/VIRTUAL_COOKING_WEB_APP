@@ -7,6 +7,7 @@ import { useState, useEffect, useRef, useCallback } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { ChevronLeft, Flame, CheckCircle2, Target, AlertTriangle } from 'lucide-react'
 import useGameStore from '../store/gameStore'
+import { matchesIngredient } from '../data/ingredients'
 import { toolCategories } from '../data/tools'
 import { getSlicesForIngredient } from '../data/sliceimages'
 import { RECIPE_COOKWARE, getRandomTip } from '../data/sopData'
@@ -216,7 +217,7 @@ export default function StoveView({ onClose, onFinishCooking, selectedRecipe }: 
   // SOP 4: Careful ingredient dropping
   const dropIn = (name: string) => {
     if (state === 'done' || state === 'burnt') return
-    const ing = collectedIngredients.find(i => i.name === name)
+    const ing = collectedIngredients.find(i => i.name === name || matchesIngredient(i.name, name))
     if (!ing) return
     if (!cookware) { flash('Pick a cookware first! 🍳'); return }
     if (inPot.includes(name) || pendingDrops.current.has(name)) { flash(`${ing.name} is already in the ${cookware.name}!`); return }
@@ -242,7 +243,7 @@ export default function StoveView({ onClose, onFinishCooking, selectedRecipe }: 
           flash(`⚠ SOP: Use the ${requiredTool} first!`);
           return;
         }
-        if (name !== expectedNext) {
+        if (!matchesIngredient(name, expectedNext)) {
           recordChronologicalMistake();
           flash(`⚠ SOP: Ingredients must be added in chronological order! Expected: ${expectedNext}`);
           return;
