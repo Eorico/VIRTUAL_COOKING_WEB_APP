@@ -166,7 +166,7 @@ interface GameActions {
   clearFeedback: () => void
 
   // Reset
-  resetGame: () => void
+  resetGame: (keepRecipe?: boolean) => void
   resetAll: () => void
 }
 
@@ -755,7 +755,21 @@ const useGameStore = create<GameStore>()(
       clearFeedback: () => set({ currentFeedback: null }),
 
       // ---- Resets ----
-      resetGame: () => set(initialSessionState),
+      resetGame: (keepRecipe?: boolean) => {
+        const s = get()
+        if (keepRecipe && s.selectedRecipe) {
+          const r = s.selectedRecipe
+          const l = s.selectedLevel
+          set({
+            ...initialSessionState,
+            selectedRecipe: r,
+            selectedLevel: l,
+          })
+          get().initializeIngredients(r)
+        } else {
+          set(initialSessionState)
+        }
+      },
 
       resetAll: () =>
         set({
