@@ -457,16 +457,17 @@ export const recipes: Recipe[] = [
       "Pepper"
     ],
     "chronologicalSteps": [
-      "Cooking oil",
-      "Onion",
-      "Celery",
-      "Garlic",
-      "Chicken breast",
-      "Chicken broth",
-      "Carrot",
-      "Egg noodles",
-      "Salt"
-    ],
+        "Butter",
+        "Onion",
+        "Garlic",
+        "Butternut squash",
+        "Vegetable broth",
+        "tool:spoon",
+        "Cream",
+        "Salt",
+        "Pepper",
+        "tool:ladle"
+      ],
     "tools": [
       "cboard",
       "chefs",
@@ -555,14 +556,17 @@ export const recipes: Recipe[] = [
       "Pepper"
     ],
     "chronologicalSteps": [
-      "Butter",
-      "Onion",
-      "Potatoes",
-      "Corn kernels",
-      "Chicken broth",
-      "Milk",
-      "Salt"
-    ],
+        "Butter",
+        "Onion",
+        "Garlic",
+        "Tomato",
+        "Vegetable broth",
+        "tool:spoon",
+        "Cream",
+        "Salt",
+        "Pepper",
+        "tool:ladle"
+      ],
     "tools": [
       "cboard",
       "chefs",
@@ -655,13 +659,17 @@ export const recipes: Recipe[] = [
       "Pepper"
     ],
     "chronologicalSteps": [
-      "Butter",
-      "Onion",
-      "Garlic",
-      "Butternut squash",
-      "Vegetable broth",
-      "Cream"
-    ],
+        "Butter",
+        "Onion",
+        "Potatoes",
+        "Chicken broth",
+        "tool:spoon",
+        "Corn kernels",
+        "Milk",
+        "Salt",
+        "Pepper",
+        "tool:ladle"
+      ],
     "tools": [
       "cboard",
       "chefs",
@@ -1182,15 +1190,19 @@ export const recipes: Recipe[] = [
       "tongs"
     ],
     "chronologicalSteps": [
-      "Fish",
-      "Salt",
-      "Cooking oil",
-      "Onion",
-      "Garlic",
-      "Ginger",
-      "Bell pepper",
-      "Carrot"
-    ],
+        "Cooking oil",
+        "Tilapia",
+        "tool:tongs",
+        "Onion",
+        "Carrot",
+        "Bell pepper",
+        "tool:spoon",
+        "Vinegar",
+        "Water",
+        "Cornstarch",
+        "Salt",
+        "Pepper"
+      ],
     "steps": [
       "Clean and score the fish",
       "Fry fish until golden brown and set aside",
@@ -1280,13 +1292,16 @@ export const recipes: Recipe[] = [
       "mcup"
     ],
     "chronologicalSteps": [
-      "Beef shank",
-      "Water",
-      "Onion",
-      "Corn",
-      "Peppercorns",
-      "Cabbage"
-    ],
+        "Beef shank",
+        "Water",
+        "Onion",
+        "Corn cobs",
+        "Potatoes",
+        "Cabbage",
+        "Salt",
+        "Pepper",
+        "tool:ladle"
+      ],
     "steps": [
       "Boil beef shank in water with onion",
       "Simmer for 2–3 hours until beef is tender",
@@ -1656,13 +1671,19 @@ export const recipes: Recipe[] = [
       "mallet"
     ],
     "chronologicalSteps": [
-      "Beef",
-      "Carrot",
-      "Hotdog",
-      "Pickle",
-      "Egg",
-      "Cooking oil"
-    ],
+        "Beef",
+        "tool:mallet",
+        "Hotdog",
+        "Carrot",
+        "Boiled egg",
+        "Cooking oil",
+        "Soy sauce",
+        "Beef stock",
+        "Pickles relish",
+        "Salt",
+        "Pepper",
+        "tool:spoon"
+      ],
     "steps": [
       "Pound beef until thin",
       "Place hotdog, carrot, egg on beef",

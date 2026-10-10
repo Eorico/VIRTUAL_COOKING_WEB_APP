@@ -254,6 +254,15 @@ const useGameStore = create<GameStore>()(
 
       // ---- Ingredients ----
       initializeIngredients: (recipe) => {
+        // Seed the "expected cut" for each ingredient the recipe says to cut,
+        // so Cutting Technique can actually be scored (otherwise it was always 100%).
+        const expectedCutType: Record<string, CuttingTechnique> = {}
+        if (recipe.cutInstructions) {
+          for (const [ingName, info] of Object.entries(recipe.cutInstructions)) {
+            const resolved = resolveIngredientByName(ingName)
+            expectedCutType[resolved?.name ?? ingName] = info.technique
+          }
+        }
         set({
           requiredIngredients: recipe.ingredients.map((name, i) => {
             const resolved = resolveIngredientByName(name)
@@ -274,6 +283,8 @@ const useGameStore = create<GameStore>()(
           measuredIngredients: [],
           cookedIngredients: [],
           chronologicalOrderMistakes: 0,
+          expectedCutType,
+          actualCutType: {},
         })
       },
 
@@ -455,33 +466,49 @@ const useGameStore = create<GameStore>()(
           ? (washedCount / washableRequired.length) * 100
           : 100   // no washable ingredients → full marks
 
-        // ── Cutting technique: award points for EVERY sliced ingredient.
-        //    expectedCutType may be empty (no recipe hints), so any cut = 100.
-        //    If expected is set, compare to player's actual choice. ──
-        const slicedNames = s.slicedIngredients
-        let correctCuts = 0
-        let totalCuts = slicedNames.length   // one point per sliceable ingredient
-
-        if (totalCuts > 0) {
-          for (const name of slicedNames) {
+        // ── Cutting technique (STRICT): the denominator is every ingredient the
+        //    recipe REQUIRES to be cut (keys of expectedCutType). An ingredient that
+        //    should have been cut but wasn't scores 0; a wrong technique scores half.
+        //    This stops players from passing while leaving required ingredients unsliced. ──
+        const expectedCutNames = Object.keys(s.expectedCutType)
+        let cutting: number
+        if (expectedCutNames.length > 0) {
+          let cutPoints = 0
+          for (const name of expectedCutNames) {
             const expected = s.expectedCutType[name]
-            const actual   = s.actualCutType[name]
-            if (!expected || !actual) {
-              // No expected type set → award full credit for cutting it at all
-              correctCuts++
-            } else if (actual === expected) {
-              correctCuts++
-            }
-            // else wrong technique → 0 for this ingredient (but still made the cut, no penalty below 0)
+            // find the player's actual cut for this ingredient (name-tolerant)
+            const actualKey = Object.keys(s.actualCutType).find(
+              k => k === name || matchesIngredient(k, name),
+            )
+            const actual = actualKey ? s.actualCutType[actualKey] : undefined
+            if (!actual) cutPoints += 0           // required cut not performed
+            else if (actual === expected) cutPoints += 1
+            else cutPoints += 0.5                 // cut, but wrong technique
           }
+          cutting = (cutPoints / expectedCutNames.length) * 100
+        } else {
+          // Recipe has no required cuts — credit any cuts the player did make.
+          cutting = 100
         }
-        let cutting = totalCuts > 0 ? (correctCuts / totalCuts) * 100 : 100
 
-        // ── Measuring accuracy: average of all measured ingredient accuracies ──
-        const measureEntries = Object.values(s.measuringProgress) as { amount: number; accuracy: number }[]
-        const measuring = measureEntries.length > 0
-          ? measureEntries.reduce((sum, m) => sum + m.accuracy, 0) / measureEntries.length
-          : 100
+        // ── Measuring accuracy (STRICT where the game enforces measuring).
+        //    Levels 1–2 require measuring every ingredient before cooking, so un-measured
+        //    or inaccurate measurements are penalized (denominator = all required).
+        //    Higher levels that never engaged measuring are not punished for it. ──
+        const enforcesMeasuring = (s.selectedRecipe?.level ?? 1) <= 2
+        const anyMeasured = Object.keys(s.measuringProgress).length > 0
+        let measuring: number
+        if ((enforcesMeasuring || anyMeasured) && s.requiredIngredients.length > 0) {
+          let measureSum = 0
+          for (const req of s.requiredIngredients) {
+            const entry = s.measuringProgress[req.name]
+              ?? (Object.entries(s.measuringProgress).find(([k]) => matchesIngredient(k, req.name))?.[1])
+            measureSum += entry ? entry.accuracy : 0
+          }
+          measuring = measureSum / s.requiredIngredients.length
+        } else {
+          measuring = 100
+        }
 
         let cooking = 100
         if (s.burnedFood) cooking = 0
@@ -571,8 +598,9 @@ const useGameStore = create<GameStore>()(
           },
         ]
 
-        // Revised weights: accuracy 10%, washing 10%, cutting 10%, measuring 10%, cooking 50%, timing 10%
-        const total = accuracy * 0.10 + washing * 0.10 + cutting * 0.10 + measuring * 0.10 + cooking * 0.50 + timing * 0.10
+        // Weights (must match the rows shown in ResultsScreen):
+        // accuracy 15%, washing 10%, cutting 20%, measuring 15%, cooking 30%, timing 10%
+        const total = accuracy * 0.15 + washing * 0.10 + cutting * 0.20 + measuring * 0.15 + cooking * 0.30 + timing * 0.10
         const rounded = Math.round(total)
 
         let starRating = 0

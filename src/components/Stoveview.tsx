@@ -124,6 +124,13 @@ export default function StoveView({ onClose, onFinishCooking, selectedRecipe }: 
   )
   const allInPot = readyIngredients.length > 0 && readyIngredients.every(i => inPot.includes(i.name))
 
+  // Comment 11: the simmer countdown (toward "done" then "burnt") must not start until
+  // the player has finished adding everything in the required order. Before that the lit
+  // stove is just preheating, so the timer can't run out while prep is still happening.
+  const chronoLen = selectedRecipe?.chronologicalSteps?.length ?? 0
+  const sequenceDone = chronoLen > 0 ? completedSteps >= chronoLen : allInPot
+  const cookClockActive = fireOn && heatLevel !== 'off' && sequenceDone
+
   const stepImageSet = selectedRecipe ? COOKING_STEP_IMAGES[selectedRecipe.id] : undefined
 
   const isPakbet = selectedRecipe?.name?.toLowerCase() === 'pakbet' || selectedRecipe?.id === 11
@@ -220,6 +227,12 @@ export default function StoveView({ onClose, onFinishCooking, selectedRecipe }: 
     const ing = collectedIngredients.find(i => i.name === name || matchesIngredient(i.name, name))
     if (!ing) return
     if (!cookware) { flash('Pick a cookware first! 🍳'); return }
+    // Comment 5: nothing cooks (butter melting, etc.) until the stove is actually on.
+    if (!fireOn || heatLevel === 'off') {
+      setWarn('🔥 Turn on the stove and set a heat level before adding ingredients!')
+      setTimeout(() => setWarn(''), 1800)
+      return
+    }
     if (inPot.includes(name) || pendingDrops.current.has(name)) { flash(`${ing.name} is already in the ${cookware.name}!`); return }
     if (getSlicesForIngredient(name) && !slicedIngredients.includes(name)) {
       flash(`✂ Slice the ${ing.name} at the Prep Table first!`); return
@@ -294,23 +307,25 @@ export default function StoveView({ onClose, onFinishCooking, selectedRecipe }: 
   }
 
   const toggleFire = () => {
-    if (!cookware || inPot.length === 0) return
+    // Preheat-first flow (SOP + comment 5): the stove may be lit with an empty pot
+    // so that ingredients only start cooking/melting once there is heat.
+    if (!cookware) { flash('Pick a cookware first! 🍳'); return }
     const next = !fireOn
     setFireOn(next)
     if (next) { startCooking(); if (state === 'idle') setState('cooking') }
     else stopCooking()
   }
 
-  // Timer
+  // Timer — only accrues once the cook clock is active (all ingredients added in order)
   useEffect(() => {
-    if (!fireOn || state === 'burnt' || state === 'served' || state === 'served-burnt') return
+    if (!cookClockActive || state === 'burnt' || state === 'served' || state === 'served-burnt') return
     const iv = setInterval(() => {
       const h = useGameStore.getState().heatLevel
       const add = h === 'off' ? 0 : h === 'low' ? 0.2 : h === 'medium' ? 0.3 : 0.4
       setSeconds(s => s + add)
     }, 200)
     return () => clearInterval(iv)
-  }, [fireOn, state])
+  }, [cookClockActive, state])
 
   // Burn / done detection
   useEffect(() => {
@@ -418,6 +433,27 @@ export default function StoveView({ onClose, onFinishCooking, selectedRecipe }: 
           <motion.div className="prep-unsafe-banner" style={{ position: 'absolute', top: 130, left: 20, right: 20, zIndex: 40 }}
             initial={{ opacity: 0, y: -16 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}>
             <AlertTriangle size={18} strokeWidth={2.5} /> {warn}
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Comment 7: prominent, hard-to-miss warnings for "about to burn" and "burnt" */}
+      <AnimatePresence>
+        {state === 'done' && (
+          <motion.div className="gst-burn-warning gst-burn-warning--soon"
+            key="burn-soon"
+            initial={{ opacity: 0, y: -16 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}>
+            <AlertTriangle size={20} strokeWidth={2.6} />
+            <span>Ready! Serve now — it burns in {Math.max(0, Math.ceil(BURN_SECONDS - seconds))}s!</span>
+          </motion.div>
+        )}
+        {(state === 'burnt' || state === 'served-burnt') && (
+          <motion.div className="gst-burn-warning gst-burn-warning--burnt"
+            key="burn-now"
+            initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0 }}
+            transition={{ repeat: Infinity, repeatType: 'reverse', duration: 0.6 }}>
+            <AlertTriangle size={22} strokeWidth={2.8} />
+            <span>🔥 BURNT! The heat was too high / left on too long.</span>
           </motion.div>
         )}
       </AnimatePresence>
@@ -568,9 +604,9 @@ export default function StoveView({ onClose, onFinishCooking, selectedRecipe }: 
           ) : (
             <div className="gst-cook-row">
               <motion.button className={`gst-knob ${fireOn ? 'on' : ''}`}
-                onClick={toggleFire} whileTap={{ scale: 0.88 }} disabled={inPot.length === 0}>
+                onClick={toggleFire} whileTap={{ scale: 0.88 }}>
                 <Flame size={22} strokeWidth={2} />
-                <span>{fireOn ? 'Fire OFF' : inPot.length === 0 ? 'Add food first' : 'Ignite'}</span>
+                <span>{fireOn ? 'Fire OFF' : 'Ignite'}</span>
               </motion.button>
   
               <div className="gst-heat-mini">
@@ -595,24 +631,31 @@ export default function StoveView({ onClose, onFinishCooking, selectedRecipe }: 
                 </motion.button>
               )}
   
-              {(state === 'done' || state === 'burnt') && (
-                <motion.button
-                  className={state === 'burnt' ? 'g-btn g-btn--ghost' : 'g-btn g-btn--gold'}
-                  style={{ padding: '12px 26px', fontSize: 16 }}
-                  onClick={handleServe}
-                  initial={{ scale: 0 }} animate={{ scale: 1 }} whileTap={{ scale: 0.95 }}>
-                  <CheckCircle2 size={18} />
-                  {state === 'burnt' ? 'Serve anyway…' : '🍽 Serve!'}
-                </motion.button>
-              )}
-              {(state === 'served' || state === 'served-burnt') && (
-                <motion.div style={{ fontSize: 15, color: state === 'served' ? 'var(--gold)' : 'var(--text-secondary)', fontWeight: 700 }}
-                  initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
-                  🍽 Serving your dish…
-                </motion.div>
-              )}
             </div>
           )
+        )}
+
+        {/* Serve controls — always visible regardless of the active tab (comment 7) */}
+        {(state === 'done' || state === 'burnt') && (
+          <motion.div className="gst-serve-bar"
+            initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}>
+            <motion.button
+              className={state === 'burnt' ? 'g-btn g-btn--ghost' : 'g-btn g-btn--gold'}
+              style={{ padding: '12px 26px', fontSize: 16 }}
+              onClick={handleServe}
+              whileTap={{ scale: 0.95 }}>
+              <CheckCircle2 size={18} />
+              {state === 'burnt' ? 'Serve anyway…' : '🍽 Serve!'}
+            </motion.button>
+          </motion.div>
+        )}
+        {(state === 'served' || state === 'served-burnt') && (
+          <div className="gst-serve-bar">
+            <motion.div style={{ fontSize: 15, color: state === 'served' ? 'var(--gold)' : 'var(--text-secondary)', fontWeight: 700 }}
+              initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
+              🍽 Serving your dish…
+            </motion.div>
+          </div>
         )}
 
         {activeTab === 'utensils' && (
@@ -631,11 +674,11 @@ export default function StoveView({ onClose, onFinishCooking, selectedRecipe }: 
         <p className="gst-hint">
           {notice ? notice
             : !cookware ? 'Choose a pot or pan — it will land on the burner'
-            : inPot.length === 0 ? '👇 Tap ingredients below to drop them in'
-            : !fireOn && state !== 'done' ? (allInPot ? 'All in! Tap Ignite 🔥' : 'Add more, or tap Ignite 🔥')
+            : !fireOn && state !== 'done' && state !== 'burnt' ? '🔥 Tap Ignite, then pick a heat level to preheat'
             : fireOn && heatLevel === 'off' ? 'Select a heat level to start cooking!'
+            : state === 'cooking' && !sequenceDone ? '👇 Add ingredients below in the correct order'
             : state === 'cooking' ? `Cooking… ${Math.max(0, COOK_SECONDS - Math.floor(seconds))}s remaining — don't let it burn!`
-            : state === 'done'    ? `✅ Ready! Tap Serve before it burns in ${Math.max(0, BURN_SECONDS - Math.floor(seconds))}s!`
+            : state === 'done'    ? `✅ Ready! Tap Serve before it burns in ${Math.max(0, Math.ceil(BURN_SECONDS - seconds))}s!`
             : state === 'served'  ? '🍽 Serving your delicious dish…'
             : state === 'burnt'   ? '💀 It burnt… tap Serve anyway or keep it as a lesson!'
             : state === 'served-burnt' ? '🍽 Serving your burnt dish…' : ''}

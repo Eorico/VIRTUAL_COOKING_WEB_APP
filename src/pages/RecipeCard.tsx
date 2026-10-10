@@ -196,6 +196,18 @@ export default function RecipeCard({ setScreen, isPopup, onClose }: RecipeCardPr
         </div>
       </div>
 
+      {/* Popup Continue button — lets the player dismiss the card and carry on (comment 14) */}
+      {isPopup && (
+        <div style={{ display: 'flex', justifyContent: 'center', padding: '8px 20px 20px' }}>
+          <motion.button className="g-btn g-btn--gold"
+            whileTap={{ scale: 0.97 }}
+            onClick={onClose}
+            style={{ maxWidth: 420, width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, height: 48, fontSize: 15, fontWeight: 700 }}>
+            <span>Continue</span> <ChevronRight size={20} strokeWidth={2.5} />
+          </motion.button>
+        </div>
+      )}
+
       {/* Bottom Sticky Action Bar */}
       {!isPopup && (
       <div className="g-sheet" style={{

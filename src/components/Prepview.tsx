@@ -371,6 +371,11 @@ export default function PrepView({ onClose }: Props) {
           const { target, unit, step } = parseQty(measureTarget.qty)
           const pct = Math.min(100, (measureVal / target) * 100)
           const over = measureVal > target
+          // Comment 4: show the actual measuring tool being used — a measuring spoon
+          // for tsp/tbsp amounts, a measuring cup for cups/ml/larger volumes.
+          const usesSpoon = /tsp|tbsp|teaspoon|tablespoon|pinch/i.test(unit)
+          const measureToolImg = usesSpoon ? '/assets/tools/measuringspoons.png' : '/assets/tools/measuring-cup.png'
+          const measureToolName = usesSpoon ? 'Measuring spoon' : 'Measuring cup'
           return (
             <motion.div className="gm-modal-overlay" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
               onClick={() => setMeasureTarget(null)}>
@@ -380,6 +385,13 @@ export default function PrepView({ onClose }: Props) {
                   onError={e => { (e.target as HTMLImageElement).src = '/assets/ingredients/onion.png' }} />
                 <h3>{measureTarget.name}</h3>
                 <p className="gm-modal-target">Recipe needs: <strong>{measureTarget.qty}</strong></p>
+
+                {/* The measuring tool in use (comment 4) */}
+                <div className="gm-tool">
+                  <img src={measureToolImg} alt={measureToolName} className="gm-tool-img"
+                    onError={e => { (e.target as HTMLImageElement).style.display = 'none' }} />
+                  <span className="gm-tool-name">{measureToolName}</span>
+                </div>
 
                 {/* measuring cup fill */}
                 <div className="gm-cup">

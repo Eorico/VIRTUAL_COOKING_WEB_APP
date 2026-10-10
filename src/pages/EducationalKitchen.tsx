@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Refrigerator, GalleryVerticalEnd, Scissors, Droplets, Flame, ChevronLeft, CheckCircle2, ChevronRight, Snowflake, Package, Microwave } from 'lucide-react'
+import { Refrigerator, GalleryVerticalEnd, Droplets, Flame, ChevronLeft, CheckCircle2, ChevronRight, Snowflake, Package, Microwave } from 'lucide-react'
 import FridgeView    from '../components/Fridgeview'
 import CabinetView   from '../components/Cabinetview'
 import PrepView      from '../components/Prepview'
@@ -55,11 +55,13 @@ export default function EducationalKitchen({ onBack, onFinish }: Props) {
   const collected    = collectedIngredients.length
   const allCollected = collected >= req && req > 0
   const washables    = collectedIngredients.filter(isWashable)
-  const allWashed    = washables.length === 0 ? collected > 0
-    : washables.every(i => washedIngredients.includes(i.name))
   const sliceables   = collectedIngredients.filter(i => !!getSlicesForIngredient(i.name))
-  const allSliced    = collected > 0 && sliceables.every(i => slicedIngredients.includes(i.name))
-  const allMeasured  = measuredIngredients.length >= collected && collected > 0
+  // A station only reads "done" AFTER every ingredient has been gathered.
+  // This prevents the Sink/Prep from falsely showing a checkmark before use
+  // (and the flip-flop where the check appears, then disappears on the next pick).
+  const allWashed    = allCollected && washables.every(i => washedIngredients.includes(i.name))
+  const allSliced    = allCollected && sliceables.every(i => slicedIngredients.includes(i.name))
+  const allMeasured  = allCollected && collectedIngredients.every(i => measuredIngredients.includes(i.name))
   
   const reqTools = selectedRecipe?.tools || []
   const allToolsCollected = reqTools.length > 0 
@@ -170,7 +172,7 @@ export default function EducationalKitchen({ onBack, onFinish }: Props) {
 
             <motion.button className={`ek-stn-btn ${allSliced && allMeasured ? 'ek-stn-btn--done' : kitchenStep==='slicing'||kitchenStep==='measuring' ? 'ek-stn-btn--cta' : ''}`}
               style={{ left: '26%', bottom: '22%' }} onClick={() => setActive('prep')}>
-              <div className="ek-stn-icon"><Scissors size={28} strokeWidth={1.5} /></div>
+              <div className="ek-stn-icon"><span style={{ fontSize: 26, lineHeight: 1 }}>🔪</span></div>
               <span>Prep Table</span>
               {allSliced && allMeasured && <CheckCircle2 size={15} className="ek-stn-check" />}
             </motion.button>
