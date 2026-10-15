@@ -3,6 +3,7 @@ import { motion } from 'framer-motion'
 import { ChevronLeft, CheckCircle2, AlertCircle, XCircle, Unlock, Trophy, Shield } from 'lucide-react'
 import useGameStore from '../store/gameStore'
 import { recipes } from '../data/recipes'
+import { COOKING_STEP_IMAGES } from '../data/cookingStepImages'
 import type { SetScreenProps } from '../types'
 
 export default function ResultsScreen({ setScreen }: SetScreenProps) {
@@ -123,7 +124,14 @@ export default function ResultsScreen({ setScreen }: SetScreenProps) {
               animate={{ scale: 1, rotate: 0, opacity: 1 }}
               transition={{ type: 'spring', damping: 13, delay: 0.05 }}>
               <img src={selectedRecipe.image} alt={selectedRecipe.name} className="rs-dish-img-big"
-                onError={e => { (e.target as HTMLImageElement).style.display = 'none' }} />
+                onError={e => {
+                  // Comment 14: never leave the circle empty — fall back to the plated
+                  // cooking image, then a neutral placeholder, instead of hiding the dish.
+                  const el = e.target as HTMLImageElement
+                  const done = COOKING_STEP_IMAGES[selectedRecipe.id]?.done
+                  if (done && !el.dataset.fb1) { el.dataset.fb1 = '1'; el.src = done; return }
+                  if (!el.dataset.fb2) { el.dataset.fb2 = '1'; el.src = '/assets/kitchen/table-bg.jpg' }
+                }} />
               {passed && [...Array(6)].map((_, i) => (
                 <motion.span key={i} className="rs-sparkle"
                   style={{ left: `${8 + i * 16}%`, top: i % 2 ? '6%' : '78%' }}

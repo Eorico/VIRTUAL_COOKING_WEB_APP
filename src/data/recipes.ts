@@ -137,7 +137,7 @@ export const recipes: Recipe[] = [
         "description": "dice cut"
       },
       "Celery": {
-        "technique": "dice",
+        "technique": "mince",
         "size": "standard",
         "description": "dice cut"
       },
@@ -382,7 +382,7 @@ export const recipes: Recipe[] = [
         "description": "slice cut"
       },
       "Celery": {
-        "technique": "slice",
+        "technique": "straight cut",
         "size": "standard",
         "description": "slice cut"
       },
@@ -694,7 +694,7 @@ export const recipes: Recipe[] = [
         "description": "dice cut"
       },
       "Potatoes": {
-        "technique": "cube",
+        "technique": "dice",
         "size": "standard",
         "description": "cube cut"
       }
@@ -1113,7 +1113,7 @@ export const recipes: Recipe[] = [
         "description": "mince cut"
       },
       "Potatoes": {
-        "technique": "cube",
+        "technique": "dice",
         "size": "standard",
         "description": "cube cut"
       },
@@ -1318,7 +1318,7 @@ export const recipes: Recipe[] = [
         "description": "slice cut"
       },
       "Potatoes": {
-        "technique": "cube",
+        "technique": "dice",
         "size": "standard",
         "description": "cube cut"
       },
@@ -1584,7 +1584,7 @@ export const recipes: Recipe[] = [
     ],
     "cutInstructions": {
       "Potatoes": {
-        "technique": "cube",
+        "technique": "dice",
         "size": "standard",
         "description": "cube cut"
       },
@@ -1599,7 +1599,7 @@ export const recipes: Recipe[] = [
         "description": "dice cut"
       },
       "Bell pepper": {
-        "technique": "dice",
+        "technique": "cube",
         "size": "standard",
         "description": "dice cut"
       },
@@ -1777,7 +1777,7 @@ export const recipes: Recipe[] = [
         "description": "dice cut"
       },
       "Bell pepper": {
-        "technique": "dice",
+        "technique": "cube",
         "size": "standard",
         "description": "dice cut"
       },

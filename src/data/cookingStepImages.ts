@@ -51,12 +51,14 @@ export const COOKING_STEP_IMAGES: Record<number, CookingStepImageSet> = {
     burnt: '/assets/COOKING PART/3-tomato-sauce/9-burnt.png'
   },
   4: {
+    // Aligned to chronologicalSteps [Egg yolks, whisk, Butter, Lemon juice, Salt]:
+    // each frame advances as that step is performed (comment 13).
     steps: [
-      '/assets/COOKING PART/4-hollandaise/step-1.png',
       '/assets/COOKING PART/4-hollandaise/step-1.png',
       '/assets/COOKING PART/4-hollandaise/step-2.png',
       '/assets/COOKING PART/4-hollandaise/step-3.png',
-      '/assets/COOKING PART/4-hollandaise/step-4.png'
+      '/assets/COOKING PART/4-hollandaise/step-4.png',
+      '/assets/COOKING PART/4-hollandaise/step-5.png'
     ],
     done: '/assets/COOKING PART/4-hollandaise/step-5.png'
   },

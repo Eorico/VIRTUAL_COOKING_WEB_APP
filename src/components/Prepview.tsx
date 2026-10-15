@@ -9,7 +9,7 @@ import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { ChevronLeft, AlertTriangle, Shield } from 'lucide-react'
 import { getSlicesForIngredient } from '../data/sliceimages'
-import { isWashable } from '../data/ingredients'
+import { isWashable, matchesIngredient } from '../data/ingredients'
 import { toolCategories } from '../data/tools'
 import { getRandomTip } from '../data/sopData'
 import useGameStore from '../store/gameStore'
@@ -25,9 +25,9 @@ export default function PrepView({ onClose }: Props) {
   const {
     collectedIngredients, slicedIngredients, sliceIngredient,
     washedIngredients, selectedKnifeId,
-    measuredIngredients, measureIngredient, selectedRecipe,
+    measuredIngredients, measureIngredient, selectedRecipe, measuringProgress,
     detectUnsafeCutting, addStabilizedIngredient, stabilizedIngredients,
-    setKnifeStability, setCutUniformity,
+    setKnifeStability, setCutUniformity, expectedCutType,
   } = useGameStore()
 
   const [mode, setMode] = useState<'cut' | 'measure'>('cut')
@@ -48,12 +48,22 @@ export default function PrepView({ onClose }: Props) {
   const knife = selectedKnifeId
     ? toolCategories[0].types.find(k => k.id === selectedKnifeId) : null
 
-  // SOP 2 tip rotation
+  // Measure-specific tips so the cutting SOP tips don't show on the Measure tab (comment 1)
+  const MEASURE_TIPS = [
+    'Measure each ingredient to its exact recipe amount! 🧪',
+    'Use the + and − buttons to reach the target amount before confirming.',
+    'Accurate measurements keep the dish balanced and on-recipe.',
+  ]
+  const pickTip = (m: 'cut' | 'measure') =>
+    m === 'measure' ? MEASURE_TIPS[Math.floor(Math.random() * MEASURE_TIPS.length)] : getRandomTip('prep')
+
+  // SOP tip rotation — follows the active tab
   useEffect(() => {
-    setSopTip(getRandomTip('prep'))
-    const iv = setInterval(() => setSopTip(getRandomTip('prep')), 8000)
+    setSopTip(pickTip(mode))
+    const iv = setInterval(() => setSopTip(pickTip(mode)), 8000)
     return () => clearInterval(iv)
-  }, [])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [mode])
 
   // Update SOP scores when leaving
   useEffect(() => {
@@ -80,15 +90,23 @@ export default function PrepView({ onClose }: Props) {
   }
 
   const openMeasure = (name: string) => {
-    if (measuredIngredients.includes(name)) return
+    // Comment 2/8/11: a measured ingredient can be re-opened to edit/correct it.
     const ing = collectedIngredients.find(i => i.name === name)
     if (!ing) return
     setMeasureTarget({ name: ing.name, image: ing.image, qty: ing.quantity })
-    setMeasureVal(0)
+    // Pre-fill with the previous value if re-editing, otherwise start at 0.
+    const prev = measuringProgress[ing.name]?.amount
+    setMeasureVal(typeof prev === 'number' ? prev : 0)
   }
 
   const confirmMeasure = () => {
     if (!measureTarget) return
+    // Comment 2/8/11: block confirming without actually entering a measurement.
+    if (measureVal <= 0) {
+      setWarn('⚠ Enter an amount with the + button before confirming!')
+      setTimeout(() => setWarn(''), 2000)
+      return
+    }
     const { target } = parseQty(measureTarget.qty)
     const accuracy = Math.max(0, Math.round(100 - (Math.abs(measureVal - target) / target) * 100))
     measureIngredient(measureTarget.name, measureVal, accuracy)
@@ -146,6 +164,16 @@ export default function PrepView({ onClose }: Props) {
     if (!boardItem) return
     if (!knife) {
       setWarn('Pick a knife from the Cabinet first!'); setTimeout(() => setWarn(''), 1800); return
+    }
+
+    // Comment 6/9: reject a cut that doesn't match the recipe's required cut.
+    // Stays in the "stabilized" phase so the player can pick the correct cut and retry.
+    const expectedCut = expectedCutType[boardItem.name]
+      ?? Object.entries(expectedCutType).find(([k]) => matchesIngredient(k, boardItem.name))?.[1]
+    if (expectedCut && cutName !== expectedCut) {
+      setWarn(`✖ Wrong cut! ${boardItem.name} needs a “${expectedCut}” cut — try again.`)
+      setTimeout(() => setWarn(''), 2400)
+      return
     }
 
     // SOP 2 tracking
@@ -353,11 +381,11 @@ export default function PrepView({ onClose }: Props) {
               const done = measuredIngredients.includes(ing.name)
               return (
                 <motion.button key={ing.id} className={`gm-item ${done ? 'done' : ''}`}
-                  onClick={() => openMeasure(ing.name)} whileTap={!done ? { scale: .92 } : {}}>
+                  onClick={() => openMeasure(ing.name)} whileTap={{ scale: .92 }}>
                   <img src={ing.image} alt={ing.name}
                     onError={e => { (e.target as HTMLImageElement).src = '/assets/ingredients/onion.png' }} />
                   <span className="gm-item-name">{ing.name}</span>
-                  <span className="gm-item-qty">{done ? '✓ measured' : `target: ${ing.quantity}`}</span>
+                  <span className="gm-item-qty">{done ? '✓ measured — tap to edit' : `target: ${ing.quantity}`}</span>
                 </motion.button>
               )
             })}
