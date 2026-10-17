@@ -1520,7 +1520,7 @@
 .ek-root {
   position: relative;
   width: 100%;
-  height: 100vh;
+  height: var(--stage-h);
   overflow: hidden;
   font-family: -apple-system, 'SF Pro Display', 'Helvetica Neue', sans-serif;
 }
@@ -2156,7 +2156,7 @@
    MAIN MENU — compact sizing
    ═══════════════════════════════════════════════════════════ */
 .menu-logo {
-  width: min(420px, 88vw);
+  width: min(420px, calc(var(--stage-w) * .88));
   height: auto;
   object-fit: contain;
   margin: 0 auto 18px;
@@ -3396,7 +3396,7 @@
 .gf-shelf-row {
   display: flex; gap: 10px; justify-content: center; align-items: flex-end;
   pointer-events: all; flex-wrap: wrap; padding: 10px 40px;
-  max-height: 70vh; overflow-y: auto; overflow-x: hidden;
+  max-height: calc(var(--stage-h) * .70); overflow-y: auto; overflow-x: hidden;
 }
 
 .gf-shelf-glass {
@@ -3636,7 +3636,7 @@
 
 .gp-board {
   position: relative;
-  width: min(620px, 90vw);
+  width: min(620px, calc(var(--stage-w) * .90));
   height: 320px;
   background: transparent;
   border: none;
@@ -3878,8 +3878,17 @@
   filter: drop-shadow(0 0 24px rgba(245, 166, 35, .85));
 }
 
-.gst-pot--burnt .gst-pot-img {
+.gst-pot--burnt .gst-pot-img,
+.gst-pot--served-burnt .gst-pot-img {
   filter: grayscale(.7) brightness(.55) drop-shadow(0 6px 18px rgba(0, 0, 0, .8));
+}
+
+/* Recipes with no burnt artwork reuse their final frame, so the charring has to
+   come from CSS — a burnt dish must never read as a good one. `!important`
+   overrides the per-recipe step filters that would otherwise win on specificity. */
+.gst-pot-img--charred {
+  filter: sepia(.65) saturate(1.5) hue-rotate(-18deg) brightness(.42) contrast(1.35)
+    drop-shadow(0 6px 18px rgba(0, 0, 0, .85)) !important;
 }
 
 /* DEPRECATED — step images now replace pot contents
@@ -4675,11 +4684,28 @@
   filter: saturate(.55) brightness(.8);
 }
 
+/* Burnt result: charcoal rim instead of the gold "success" frame. */
+.rs-dish-frame.burnt {
+  background: radial-gradient(circle at 32% 26%, #4a3a30, #1b1512);
+  border-color: #6b4a2a;
+  box-shadow: 0 0 0 4px #3a2414, 0 0 26px rgba(120, 40, 10, .55), 0 10px 30px rgba(0, 0, 0, .7);
+}
+
+.rs-reveal-caption--burnt {
+  color: #ff8a52;
+  text-shadow: 0 2px 12px rgba(200, 60, 20, .5);
+}
+
 .rs-dish-img-big {
   width: 100%;
   height: 100%;
   object-fit: cover;
   border-radius: 50%;
+}
+
+/* Used when the recipe ships no burnt artwork (see resolveBurntImage). */
+.rs-dish-img-big--charred {
+  filter: sepia(.65) saturate(1.5) hue-rotate(-18deg) brightness(.42) contrast(1.35);
 }
 
 .rs-sparkle {
@@ -4833,7 +4859,7 @@
   }
 
   .gp-board {
-    width: min(340px, 88vw);
+    width: min(340px, calc(var(--stage-w) * .88));
     height: 200px;
   }
 
@@ -4923,7 +4949,7 @@
   }
 
   .menu-logo {
-    width: min(300px, 80vw);
+    width: min(300px, calc(var(--stage-w) * .80));
   }
 
   .menu-item {
@@ -5077,7 +5103,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  min-height: 100vh;
+  min-height: var(--stage-h);
 }
 
 .lc-body {
@@ -5984,4 +6010,127 @@ transform: translateX(-50%);}
 
 .ek-dot.done {
   background: rgba(52, 199, 89, 0.7);
+}
+/* ══════════════════════════════════════════════════════════════
+   RECIPE CARD SLOT — lives in the ingredient drawer
+   Replaces the old floating "Recipe Card" button.
+   ══════════════════════════════════════════════════════════════ */
+.rcs {
+  position: relative;
+  flex-shrink: 0;
+}
+
+/* Pinned leading slot in the counter tray, divided off from the ingredients. */
+.rcs--tray {
+  z-index: 3;
+  margin-left: 16px;
+  padding-right: 14px;
+  border-right: 2px solid rgba(245, 166, 35, .28);
+}
+
+.rcs-btn--tray {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #4a2d14;
+  background: radial-gradient(circle at 35% 28%, #ffe6b0, #e0b464);
+  border: 3px solid #8a5a30;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, .5), inset 0 -3px 6px rgba(0, 0, 0, .18);
+}
+
+/* ── Hover explainer ── */
+.rcs-tip {
+  position: absolute;
+  z-index: 900;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  width: max-content;
+  max-width: 230px;
+  padding: 10px 14px;
+  border-radius: 14px;
+  background: rgba(14, 9, 2, .96);
+  border: 2px solid rgba(245, 166, 35, .4);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, .6);
+  font-size: 12px;
+  line-height: 1.35;
+  color: var(--text-2);
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(6px);
+  transition: opacity .16s ease, transform .16s ease;
+}
+
+.rcs-tip strong {
+  font-size: 13px;
+  font-weight: 800;
+  color: var(--gold);
+}
+
+.rcs-tip em {
+  font-style: normal;
+  font-weight: 700;
+  color: var(--text-1);
+}
+
+.rcs--tray .rcs-tip {
+  bottom: calc(100% + 12px);
+  left: 0;
+}
+
+.rcs:hover .rcs-tip,
+.rcs-btn:focus-visible ~ .rcs-tip {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ── Recipe modal ── */
+.rcs-overlay {
+  z-index: 9999;
+}
+
+.rcs-panel {
+  width: 90%;
+  max-width: 700px;
+  max-height: calc(var(--stage-h) * .90);
+  overflow-y: auto;
+  padding: 0;
+  border-radius: 24px;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   CHEF MASCOT (page-mascot) — above the step hint
+   ══════════════════════════════════════════════════════════════ */
+.ek-mascot {
+  position: absolute;
+  /* Tucked into the bottom-left corner, clear of the Prep Table button at
+     26% of the scene — he sits above the stations (z-index 99), so any
+     overlap would swallow their clicks, not just cover them. */
+  left: 24px;
+  /* Clears the action bar (≈115px tall) so the chef stands on top of it rather
+     than having his feet hidden behind it. */
+  bottom: 120px;
+  /* Below .ek-stations (90). The mascot's sprite box is larger than the chef
+     drawn inside it, so wherever that transparent padding reaches a station
+     button it would otherwise swallow the click. */
+  z-index: 50;
+  filter: drop-shadow(0 10px 22px rgba(0, 0, 0, .55));
+}
+
+@media (max-height: 760px) {
+  .ek-mascot {
+    bottom: 110px;
+    transform: scale(.78);
+    transform-origin: bottom left;
+  }
+}
+
+@media (max-width: 520px) {
+  .ek-mascot {
+    transform: scale(.7);
+    transform-origin: bottom left;
+  }
 }

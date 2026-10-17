@@ -3,13 +3,13 @@ import { motion } from 'framer-motion'
 import { ChevronLeft, CheckCircle2, AlertCircle, XCircle, Unlock, Trophy, Shield } from 'lucide-react'
 import useGameStore from '../store/gameStore'
 import { recipes } from '../data/recipes'
-import { COOKING_STEP_IMAGES } from '../data/cookingStepImages'
-import type { SetScreenProps } from '../types'
-
+import { COOKING_STEP_IMAGES, resolveBurntImage } from '../data/cookingStepImages'
+import type { SetScreenProps } from '../constant/interface'
 export default function ResultsScreen({ setScreen }: SetScreenProps) {
   const { selectedRecipe, calculateScores, saveRecipeProgress,
     totalScore, starRating, grade, scores, ingredientErrors, safetyWarnings,
-    unlockedRecipes, unlockedLevels, washedIngredients, resetGame, sopResults } = useGameStore()
+    unlockedRecipes, unlockedLevels, washedIngredients, resetGame, sopResults,
+    burnedFood } = useGameStore()
 
   // Snapshot unlocks BEFORE saving, so we can show what's newly unlocked
   const preRecipes = useRef<number[]>([])
@@ -31,7 +31,17 @@ export default function ResultsScreen({ setScreen }: SetScreenProps) {
     setSaved(true)
   }, [])
 
-  const passed = totalScore >= (selectedRecipe?.minScore ?? 70)
+  // Burning the food is a failed cook, whatever the other categories scored.
+  const passed = totalScore >= (selectedRecipe?.minScore ?? 70) && !burnedFood
+
+  // The dish reveal used to always show the recipe's glossy promo photo, so an
+  // overcooked dish was presented as a perfect result. A burnt cook now reveals
+  // the recipe's burnt frame, or the final frame charred in CSS when the recipe
+  // ships no burnt asset.
+  const burntOutcome = selectedRecipe && burnedFood
+    ? resolveBurntImage(selectedRecipe.id, selectedRecipe.image)
+    : null
+  const dishImage = burntOutcome?.src ?? selectedRecipe?.image
 
   const newRecipes = saved
     ? recipes.filter(r => unlockedRecipes.includes(r.id) && !preRecipes.current.includes(r.id))
@@ -112,24 +122,30 @@ export default function ResultsScreen({ setScreen }: SetScreenProps) {
         {/* ── Dish reveal ── */}
         {selectedRecipe && (
           <div className="rs-reveal">
-            {passed && (
-              <motion.div className="rs-reveal-caption"
+            {(passed || burnedFood) && (
+              <motion.div className={`rs-reveal-caption ${burnedFood ? 'rs-reveal-caption--burnt' : ''}`}
                 initial={{ scale: 0, y: 10 }} animate={{ scale: 1, y: 0 }}
                 transition={{ type: 'spring', damping: 12, delay: 0.15 }}>
-                🎉 Dish Complete!
+                {burnedFood ? '🔥 Burnt! The dish was overcooked.' : '🎉 Dish Complete!'}
               </motion.div>
             )}
-            <motion.div className={`rs-dish-frame ${passed ? 'passed' : 'failed'}`}
+            <motion.div className={`rs-dish-frame ${passed ? 'passed' : 'failed'} ${burnedFood ? 'burnt' : ''}`.trim()}
               initial={{ scale: 0.4, rotate: -8, opacity: 0 }}
               animate={{ scale: 1, rotate: 0, opacity: 1 }}
               transition={{ type: 'spring', damping: 13, delay: 0.05 }}>
-              <img src={selectedRecipe.image} alt={selectedRecipe.name} className="rs-dish-img-big"
+              <img src={dishImage} alt={selectedRecipe.name}
+                className={`rs-dish-img-big ${burntOutcome?.charred ? 'rs-dish-img-big--charred' : ''}`.trim()}
                 onError={e => {
                   // Comment 14: never leave the circle empty — fall back to the plated
                   // cooking image, then a neutral placeholder, instead of hiding the dish.
                   const el = e.target as HTMLImageElement
                   const done = COOKING_STEP_IMAGES[selectedRecipe.id]?.done
-                  if (done && !el.dataset.fb1) { el.dataset.fb1 = '1'; el.src = done; return }
+                  if (done && !el.dataset.fb1) {
+                    el.dataset.fb1 = '1'; el.src = done
+                    // The "done" frame is the good-looking one, so char it when burnt.
+                    if (burnedFood) el.classList.add('rs-dish-img-big--charred')
+                    return
+                  }
                   if (!el.dataset.fb2) { el.dataset.fb2 = '1'; el.src = '/assets/kitchen/table-bg.jpg' }
                 }} />
               {passed && [...Array(6)].map((_, i) => (

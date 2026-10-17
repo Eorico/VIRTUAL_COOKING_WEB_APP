@@ -15,13 +15,9 @@ import { getRandomTip } from '../data/sopData'
 import useGameStore from '../store/gameStore'
 import GameTray from './ui/GameTray'
 import GameTooltip from './ui/GameTooltip'
-import type { CuttingTechnique } from '../types'
-
-interface Props { onClose: () => void }
-
-type Phase = 'empty' | 'placed' | 'stabilizing' | 'stabilized' | 'cutting' | 'done'
-
-export default function PrepView({ onClose }: Props) {
+import type { CuttingTechnique, PrepPhase } from '../constant/types'
+import type { PrepViewProps } from '../constant/interface'
+export default function PrepView({ onClose }: PrepViewProps) {
   const {
     collectedIngredients, slicedIngredients, sliceIngredient,
     washedIngredients, selectedKnifeId,
@@ -35,7 +31,7 @@ export default function PrepView({ onClose }: Props) {
   const [measureVal, setMeasureVal] = useState(0)
 
   const [boardItem, setBoardItem] = useState<{ name: string; image: string } | null>(null)
-  const [phase, setPhase] = useState<Phase>('empty')
+  const [phase, setPhase] = useState<PrepPhase>('empty')
   const [resultImg, setResultImg] = useState<string | null>(null)
   const [resultCut, setResultCut] = useState('')
   const [warn, setWarn] = useState('')
@@ -222,8 +218,8 @@ export default function PrepView({ onClose }: Props) {
 
       <AnimatePresence>
         {warn && (
-          <motion.div className="prep-unsafe-banner" style={{ position: 'absolute', top: 130, left: 20, right: 20, zIndex: 40 }}
-            initial={{ opacity: 0, y: -16 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}>
+          <motion.div className="prep-unsafe-banner"
+            initial={{ opacity: 0, y: -14 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }}>
             <AlertTriangle size={18} strokeWidth={2.5} /> {warn}
           </motion.div>
         )}

@@ -1,7 +1,23 @@
-export interface CookingStepImageSet {
-  steps: string[]
-  done?: string
-  burnt?: string
+
+import type { CookingStepImageSet } from '../constant/interface'
+/**
+ * Picture to show for an overcooked dish.
+ *
+ * Only about half the recipes ship a dedicated burnt frame. Callers used to do
+ * `if (set.burnt) setImage(set.burnt)`, so for every other recipe an overcooked
+ * dish silently kept the appetising "done" picture and the player saw a perfect
+ * result after burning the food. Here a missing asset instead returns the final
+ * frame together with `charred: true`, and the caller applies the charred CSS
+ * treatment so a burnt cook never looks like a successful one.
+ */
+export function resolveBurntImage(
+  recipeId: number,
+  fallback?: string | null,
+): { src: string | null; charred: boolean } {
+  const set = COOKING_STEP_IMAGES[recipeId]
+  if (set?.burnt) return { src: set.burnt, charred: false }
+  const lastStep = set?.steps?.length ? set.steps[set.steps.length - 1] : null
+  return { src: set?.done ?? lastStep ?? fallback ?? null, charred: true }
 }
 
 export const COOKING_STEP_IMAGES: Record<number, CookingStepImageSet> = {
@@ -71,14 +87,24 @@ export const COOKING_STEP_IMAGES: Record<number, CookingStepImageSet> = {
       '/assets/COOKING PART/6-chicken-noodle-soup/5-add-chicken-pieces.png',
       '/assets/COOKING PART/6-chicken-noodle-soup/6-pour-the-chicken-broth.png',
       '/assets/COOKING PART/6-chicken-noodle-soup/8-add-sliced-carrot.png',
-      '/assets/COOKING PART/6-chicken-noodle-soup/9-stir-in-the-egg-noodles.png',
-      '/assets/COOKING PART/6-chicken-noodle-soup/9-stir-in-the-egg-noodles.png',
       '/assets/COOKING PART/6-chicken-noodle-soup/9-stir-in-the-egg-noodles.png'
     ],
     done: '/assets/COOKING PART/6-chicken-noodle-soup/7-ladle.png',
     burnt: '/assets/COOKING PART/6-chicken-noodle-soup/10-overcooked.png'
   },
-  6: { steps: [] },
+  // Butternut Squash Soup — assets live in the 8-butternut-squash-soup folder.
+  // This was an empty set, so the pot never changed and no serve image ever showed.
+  6: {
+    steps: [
+      '/assets/COOKING PART/8-butternut-squash-soup/step-1-1.png',
+      '/assets/COOKING PART/8-butternut-squash-soup/step-2.png',
+      '/assets/COOKING PART/8-butternut-squash-soup/step-3.png',
+      '/assets/COOKING PART/8-butternut-squash-soup/step-4.png',
+      '/assets/COOKING PART/8-butternut-squash-soup/step-5.png',
+      '/assets/COOKING PART/8-butternut-squash-soup/step-6.png'
+    ],
+    done: '/assets/COOKING PART/8-butternut-squash-soup/step-6.png'
+  },
   7: {
     steps: [
       '/assets/COOKING PART/5-tomato-soup/Step 1_ Prepare the ingredients_.png',
@@ -125,19 +151,34 @@ export const COOKING_STEP_IMAGES: Record<number, CookingStepImageSet> = {
       '/assets/COOKING PART/10-sinigang/4.png',
       '/assets/COOKING PART/10-sinigang/5.png',
       '/assets/COOKING PART/10-sinigang/6.png',
-      '/assets/COOKING PART/10-sinigang/pork-sinigang.png',
+      '/assets/COOKING PART/10-sinigang/porksinigang.png',
       '/assets/COOKING PART/10-sinigang/8-kangkong.png'
     ],
-    done: '/assets/COOKING PART/10-sinigang/8-done'
+    done: '/assets/COOKING PART/10-sinigang/8.sinigangDone.png'
   },
   11: {
     steps: [
       '/assets/COOKING PART/11-pakbet/step-2-1.png',
       '/assets/COOKING PART/11-pakbet/step-3-1.png',
       '/assets/COOKING PART/11-pakbet/step-4-1.png'
-    ]
+    ],
+    // Was missing, so serving showed no finished dish.
+    done: '/assets/COOKING PART/11-pakbet/step-4-1.png'
   },
-  12: { steps: [] },
+  // Beef Caldereta — assets live in the "15. BEEF CALDERETA" folder.
+  // Previously empty: the pot stayed as the bare cookware for the whole cook.
+  12: {
+    steps: [
+      '/assets/COOKING PART/15. BEEF CALDERETA/1  Add cooking oil.png',
+      '/assets/COOKING PART/15. BEEF CALDERETA/Step 2  Sauté the aromatics_.png',
+      '/assets/COOKING PART/15. BEEF CALDERETA/Step 3_ Brown the beef_.png',
+      '/assets/COOKING PART/15. BEEF CALDERETA/Step 4_ Add the sauce_.png',
+      '/assets/COOKING PART/15. BEEF CALDERETA/Step 5_ Simmer the beef_.png',
+      '/assets/COOKING PART/15. BEEF CALDERETA/Step 6_ Add the vegetables_.png',
+      '/assets/COOKING PART/15. BEEF CALDERETA/Step 7_ Finish the dish_.png'
+    ],
+    done: '/assets/COOKING PART/15. BEEF CALDERETA/Step 8_ Serve_.png'
+  },
   13: {
     steps: [
       '/assets/COOKING PART/13-fish-escabeche/step-1.png',
@@ -148,15 +189,18 @@ export const COOKING_STEP_IMAGES: Record<number, CookingStepImageSet> = {
       '/assets/COOKING PART/13-fish-escabeche/step-6.png',
       '/assets/COOKING PART/13-fish-escabeche/step-7.png',
       '/assets/COOKING PART/13-fish-escabeche/step-8.png'
-    ]
+    ],
+    // Was missing, so serving showed no finished dish.
+    done: '/assets/COOKING PART/13-fish-escabeche/step-8.png'
   },
   14: {
     steps: [
+      // step-1 was unused and step5 was repeated three times as padding; the
+      // renderer now spreads a short set across the steps, so list each frame once.
+      '/assets/COOKING PART/14-bulalo/step-1.png',
       '/assets/COOKING PART/14-bulalo/step2.png',
       '/assets/COOKING PART/14-bulalo/step3.png',
       '/assets/COOKING PART/14-bulalo/step4.png',
-      '/assets/COOKING PART/14-bulalo/step5.png',
-      '/assets/COOKING PART/14-bulalo/step5.png',
       '/assets/COOKING PART/14-bulalo/step5.png'
     ],
     done: '/assets/COOKING PART/14-bulalo/step6.png'
@@ -209,15 +253,37 @@ export const COOKING_STEP_IMAGES: Record<number, CookingStepImageSet> = {
   },
   18: {
     steps: [
+      // Full 12-frame sequence (one per cooking step). Only 6 of the 16 available
+      // frames were wired up, so the picture froze halfway through the roll.
+      '/assets/COOKING PART/18-beef-morcon/beef-morcon/1-beef.png',
       '/assets/COOKING PART/18-beef-morcon/beef-morcon/2-prepare-the-beef.png',
       '/assets/COOKING PART/18-beef-morcon/beef-morcon/3-add-carrot-strips.png',
       '/assets/COOKING PART/18-beef-morcon/beef-morcon/4-add-hotdogs.png',
       '/assets/COOKING PART/18-beef-morcon/beef-morcon/5-add-pickle-relish.png',
       '/assets/COOKING PART/18-beef-morcon/beef-morcon/6-add-sliced-egg.png',
-      '/assets/COOKING PART/18-beef-morcon/beef-morcon/7-roll-and-secure.png'
+      '/assets/COOKING PART/18-beef-morcon/beef-morcon/7-roll-and-secure.png',
+      '/assets/COOKING PART/18-beef-morcon/beef-morcon/8-heat-the-oil.png',
+      '/assets/COOKING PART/18-beef-morcon/beef-morcon/9-put-the-beef-roll.png',
+      '/assets/COOKING PART/18-beef-morcon/beef-morcon/10-brown-the-beef-roll.png',
+      '/assets/COOKING PART/18-beef-morcon/beef-morcon/12-add-soy-sauce.png',
+      '/assets/COOKING PART/18-beef-morcon/beef-morcon/13-add-beef-broth.png'
     ],
     done: '/assets/COOKING PART/18-beef-morcon/beef-morcon/16-serve.png',
     burnt: '/assets/COOKING PART/18-beef-morcon/beef-morcon/burn-version.png'
   },
-  19: { steps: [] },
+  // King Ranch Chicken — stove-top portion; the bake happens in MicrowaveView.
+  // Previously empty, so neither the pot progression nor a serve/burnt image showed.
+  19: {
+    steps: [
+      '/assets/COOKING PART/17-king-ranch-chicken/1-heat-the-oil.png',
+      '/assets/COOKING PART/17-king-ranch-chicken/2-cook-the-onion&bell-pepper.png',
+      '/assets/COOKING PART/17-king-ranch-chicken/3-make-the-sauce.png',
+      '/assets/COOKING PART/17-king-ranch-chicken/4-place-the-tortilla.png',
+      '/assets/COOKING PART/17-king-ranch-chicken/5-add-chicken-mixture.png',
+      '/assets/COOKING PART/17-king-ranch-chicken/6-sprinkle-cheese-on-top.png',
+      '/assets/COOKING PART/17-king-ranch-chicken/7-repeat-the-layers.png'
+    ],
+    done: '/assets/COOKING PART/17-king-ranch-chicken/serve.png',
+    burnt: '/assets/COOKING PART/17-king-ranch-chicken/serve-burn-version.png'
+  },
 }

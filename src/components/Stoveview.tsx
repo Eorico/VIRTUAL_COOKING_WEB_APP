@@ -11,16 +11,11 @@ import { matchesIngredient } from '../data/ingredients'
 import { toolCategories } from '../data/tools'
 import { getSlicesForIngredient } from '../data/sliceimages'
 import { RECIPE_COOKWARE, getRandomTip } from '../data/sopData'
-import { COOKING_STEP_IMAGES } from '../data/cookingStepImages'
-import type { Recipe, HeatLevel } from '../types'
+import { COOKING_STEP_IMAGES, resolveBurntImage } from '../data/cookingStepImages'
+import type { CookState, HeatLevel } from '../constant/types'
+import type { StoveViewProps } from '../constant/interface'
 import GameTray from './ui/GameTray'
 import GameTooltip from './ui/GameTooltip'
-
-interface Props {
-  onClose: () => void
-  onFinishCooking: () => void
-  selectedRecipe: Recipe | null
-}
 
 /** Seconds after "done" before food burns */
 const BURN_BUFFER = 12
@@ -35,9 +30,7 @@ const FALLBACK_POTS = [
   { id: 'wok', name: 'Wok',       img: '/assets/kitchen/wok pan.png',  type: 'wok' as const },
 ]
 
-type CookState = 'idle' | 'cooking' | 'done' | 'served' | 'burnt' | 'served-burnt'
-
-export default function StoveView({ onClose, onFinishCooking, selectedRecipe }: Props) {
+export default function StoveView({ onClose, onFinishCooking, selectedRecipe }: StoveViewProps) {
   const {
     collectedIngredients, slicedIngredients, measuredIngredients,
     heatLevel, setHeatLevel, setBurnedFood, setCookingElapsedTime,
@@ -84,7 +77,6 @@ export default function StoveView({ onClose, onFinishCooking, selectedRecipe }: 
     .map(id => allTools.find(t => t.id === id && (t.category === 'utensil' || requiredToolIds.includes(t.id)) && t.id !== 'cboard'))
     .filter(Boolean)
 
-
   // SOP 1: Cookware alignment feedback
   const [cookwareAligned, setCookwareAligned] = useState<boolean | null>(null)
   // SOP 4: Flame centering check
@@ -95,14 +87,28 @@ export default function StoveView({ onClose, onFinishCooking, selectedRecipe }: 
 
   // Cleanup refs
   const flashTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
-  const hopTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
+  // Every pending drop/serve/flame timeout, so a new drop never cancels an earlier
+  // one (a shared single ref used to drop the first ingredient on the floor).
+  const timers = useRef<Set<ReturnType<typeof setTimeout>>>(new Set())
   // Tracks ingredients currently mid-animation to prevent double-tap re-add
   const pendingDrops = useRef<Set<string>>(new Set())
 
+  /** setTimeout that is tracked and auto-cleared on unmount */
+  const track = useCallback((fn: () => void, ms: number) => {
+    const id = setTimeout(() => {
+      timers.current.delete(id)
+      fn()
+    }, ms)
+    timers.current.add(id)
+    return id
+  }, [])
+
   useEffect(() => {
+    const pending = timers.current
     return () => {
       if (flashTimer.current) clearTimeout(flashTimer.current)
-      if (hopTimer.current) clearTimeout(hopTimer.current)
+      pending.forEach(clearTimeout)
+      pending.clear()
     }
   }, [])
 
@@ -132,15 +138,49 @@ export default function StoveView({ onClose, onFinishCooking, selectedRecipe }: 
 
   const stepImageSet = selectedRecipe ? COOKING_STEP_IMAGES[selectedRecipe.id] : undefined
 
+  // If the next SOP step needs a utensil the player never took from the Cabinet,
+  // the sequence can never advance. Detect it so we can say so instead of leaving
+  // the player tapping ingredients with no explanation.
+  const nextStep = chronoLen > 0 && completedSteps < chronoLen
+    ? selectedRecipe!.chronologicalSteps![completedSteps]
+    : null
+  const nextToolId = nextStep && nextStep.startsWith('tool:') ? nextStep.slice(5) : null
+  const missingToolName = nextToolId && !invUtensils.some(u => u!.id === nextToolId)
+    ? (allTools.find(t => t.id === nextToolId)?.name ?? nextToolId)
+    : null
+
+  /**
+   * Resolve the pot image for a given step index.
+   * Several recipes ship fewer step images than they have cooking steps. Indexing
+   * directly meant the picture froze partway through and never reached the final
+   * frame. When images are scarcer than steps we spread them proportionally, and we
+   * always clamp so the last frame shows at the end instead of nothing.
+   */
+  const stepImageAt = useCallback((index: number): string | null => {
+    const imgs = stepImageSet?.steps
+    if (!imgs || imgs.length === 0 || index < 0) return null
+    if (imgs.length >= chronoLen || chronoLen === 0) {
+      return imgs[Math.min(index, imgs.length - 1)]
+    }
+    const scaled = Math.floor((index * imgs.length) / chronoLen)
+    return imgs[Math.min(scaled, imgs.length - 1)]
+  }, [stepImageSet, chronoLen])
+
   const isPakbet = selectedRecipe?.name?.toLowerCase() === 'pakbet' || selectedRecipe?.id === 11
   const isCaldereta = selectedRecipe?.name?.toLowerCase().includes('caldereta') || selectedRecipe?.id === 12
   const recipeClass = selectedRecipe ? `gst-recipe-${selectedRecipe.id} gst-recipe-${selectedRecipe.name.toLowerCase().replace(/[^a-z0-9]+/g, '-')}` : ''
   const stepClass = currentStepImage ? 'gst-pot--step-img' : ''
+  // Recipes without a dedicated burnt asset reuse the final frame, so the picture
+  // itself has to be charred in CSS — otherwise an overcooked dish looks perfect.
+  const charredDish = (state === 'burnt' || state === 'served-burnt') && !stepImageSet?.burnt
   const pakbetCookingClass = (isPakbet && currentStepImage && state !== 'served' && state !== 'served-burnt') ? 'gst-pot--pakbet-cooking' : ''
   const calderetaCookingClass = (isCaldereta && currentStepImage && state !== 'served' && state !== 'served-burnt') ? 'gst-pot--caldereta-cooking' : ''
 
   const isMorcon = selectedRecipe?.id === 18;
-  const isKingRanch = selectedRecipe?.id === 17;
+  // Recipe 19 is King Ranch Chicken (17 is Pork Afritada — the asset FOLDER is
+  // numbered 17, which is where the off-by-two came from). Using 17 here applied
+  // king-ranch pot sizing to Afritada and never to King Ranch itself.
+  const isKingRanch = selectedRecipe?.id === 19;
   const isPasta = selectedRecipe?.id === 16;
   const isBulalo = selectedRecipe?.id === 14;
 
@@ -202,9 +242,8 @@ export default function StoveView({ onClose, onFinishCooking, selectedRecipe }: 
         // Correct tool!
         flash(`Used the ${toolName}!`);
         setCompletedSteps(prev => {
-          if (stepImageSet?.steps && prev < stepImageSet.steps.length) {
-            setCurrentStepImage(stepImageSet.steps[prev]);
-          }
+          const img = stepImageAt(prev)
+          if (img) setCurrentStepImage(img)
           return prev + 1;
         });
       } else if (expectedNext.startsWith('tool:')) {
@@ -284,23 +323,17 @@ export default function StoveView({ onClose, onFinishCooking, selectedRecipe }: 
     // Mark as pending immediately to block re-taps during animation
     pendingDrops.current.add(name)
 
-    if (hopTimer.current) clearTimeout(hopTimer.current)
     const isSeasoning = ['salt', 'pepper', 'peppercorns', 'sinigang mix'].includes(name.toLowerCase())
     setHopping({ img: ing.image, key: Date.now(), type: isSeasoning ? 'shake' : 'hop' })
-    hopTimer.current = setTimeout(() => {
+    // Each drop gets its OWN timer. Previously a single shared ref meant a second
+    // drop cancelled the first one's commit: that ingredient never entered the pot
+    // yet stayed in pendingDrops forever, so it could never be re-added.
+    track(() => {
       setHopping(null)
       setInPot(p => {
         const next = p.includes(name) ? p : [...p, name]
-        if (stepImageSet?.steps) {
-          // Use chronologicalSteps index if available (correctly accounts for tool steps),
-          // otherwise fall back to pot item count
-          const imgIndex = selectedRecipe?.chronologicalSteps
-            ? stepIndexForImage
-            : next.length - 1
-          if (imgIndex < stepImageSet.steps.length) {
-            setCurrentStepImage(stepImageSet.steps[imgIndex])
-          }
-        }
+        const img = stepImageAt(selectedRecipe?.chronologicalSteps ? stepIndexForImage : next.length - 1)
+        if (img) setCurrentStepImage(img)
         return next
       })
       pendingDrops.current.delete(name)
@@ -335,9 +368,11 @@ export default function StoveView({ onClose, onFinishCooking, selectedRecipe }: 
     if (seconds >= BURN_SECONDS && state !== 'burnt' && state !== 'served' && state !== 'served-burnt') {
       setState('burnt'); setBurnedFood(true)
       setFireOn(false)
-      if (stepImageSet?.burnt) {
-        setCurrentStepImage(stepImageSet.burnt)
-      }
+      // An overcooked dish must never keep showing a good frame. Recipes with no
+      // burnt asset fall back to the final frame plus the charred treatment
+      // (see `charredDish`) instead of leaving the appetising picture up.
+      const burnt = resolveBurntImage(selectedRecipe?.id ?? -1, null)
+      if (burnt.src) setCurrentStepImage(burnt.src)
     } else if (seconds >= COOK_SECONDS && state === 'cooking') {
       setState('done')
       // Comment 13: when cooking finishes, advance the image to the cooked/done frame
@@ -345,18 +380,23 @@ export default function StoveView({ onClose, onFinishCooking, selectedRecipe }: 
       if (stepImageSet?.done) setCurrentStepImage(stepImageSet.done)
       // Fire is intentionally left ON — the dish will burn if not served in time.
     }
-  }, [seconds, BURN_SECONDS, COOK_SECONDS, state, setBurnedFood, stepImageSet])
+  }, [seconds, BURN_SECONDS, COOK_SECONDS, state, setBurnedFood, stepImageSet, selectedRecipe?.id])
 
   // SOP 4: Flame centering check — appears every FLAME_CHECK_INTERVAL seconds while cooking
   useEffect(() => {
     if (!fireOn || state !== 'cooking') return
+    let dismiss: ReturnType<typeof setTimeout> | null = null
     const iv = setInterval(() => {
       recordFlameCenteringCheck()
       setShowFlameCheck(true)
       // Auto-dismiss after 5 seconds if not tapped
-      setTimeout(() => setShowFlameCheck(false), 5000)
+      if (dismiss) clearTimeout(dismiss)
+      dismiss = setTimeout(() => setShowFlameCheck(false), 5000)
     }, FLAME_CHECK_INTERVAL * 1000)
-    return () => clearInterval(iv)
+    return () => {
+      clearInterval(iv)
+      if (dismiss) clearTimeout(dismiss)
+    }
   }, [fireOn, state, recordFlameCenteringCheck])
 
   const respondFlameCheck = () => {
@@ -371,16 +411,16 @@ export default function StoveView({ onClose, onFinishCooking, selectedRecipe }: 
     const isBurnt = state === 'burnt'
     // Show the appropriate done/burnt serving image
     if (isBurnt) {
-      if (stepImageSet?.burnt) setCurrentStepImage(stepImageSet.burnt)
+      const burnt = resolveBurntImage(selectedRecipe?.id ?? -1, null)
+      if (burnt.src) setCurrentStepImage(burnt.src)
       setState('served-burnt')
     } else {
       if (stepImageSet?.done) setCurrentStepImage(stepImageSet.done)
       setState('served')
     }
-    // After 1.5s of showing the serving image, proceed to finish
-    setTimeout(() => {
-      finish()
-    }, 1500)
+    // After 1.5s of showing the serving image, proceed to finish.
+    // Tracked so leaving the stove mid-animation can't fire finish() after unmount.
+    track(() => finish(), 1500)
   }
 
   const finish = () => {
@@ -414,8 +454,10 @@ export default function StoveView({ onClose, onFinishCooking, selectedRecipe }: 
         <button className="g-back-btn" onClick={onClose}>
           <ChevronLeft size={20} strokeWidth={2.5} /><span>Kitchen</span>
         </button>
-        <div className="sv-navbar-title">🔥 Stove</div>
-        <div className="sv-counter">⏱ {Math.floor(seconds / 60)}:{String(seconds % 60).padStart(2, '0')}</div>
+        <div className="sv-navbar-title">Stove</div>
+        {/* seconds accrues in fractional ticks — floor before display or the clock
+            renders as "0:12.600000000000003" */}
+        <div className="sv-counter">⏱ {Math.floor(seconds / 60)}:{String(Math.floor(seconds % 60)).padStart(2, '0')}</div>
       </div>
 
       {/* SOP Tip Banner */}
@@ -433,8 +475,8 @@ export default function StoveView({ onClose, onFinishCooking, selectedRecipe }: 
 
       <AnimatePresence>
         {warn && (
-          <motion.div className="prep-unsafe-banner" style={{ position: 'absolute', top: 130, left: 20, right: 20, zIndex: 40 }}
-            initial={{ opacity: 0, y: -16 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}>
+          <motion.div className="prep-unsafe-banner"
+            initial={{ opacity: 0, y: -14 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }}>
             <AlertTriangle size={18} strokeWidth={2.5} /> {warn}
           </motion.div>
         )}
@@ -457,6 +499,18 @@ export default function StoveView({ onClose, onFinishCooking, selectedRecipe }: 
             transition={{ repeat: Infinity, repeatType: 'reverse', duration: 0.6 }}>
             <AlertTriangle size={22} strokeWidth={2.8} />
             <span>🔥 BURNT! The heat was too high / left on too long.</span>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Missing required utensil — would otherwise be an unexplained dead end */}
+      <AnimatePresence>
+        {missingToolName && (
+          <motion.div className="gst-burn-warning gst-burn-warning--soon"
+            key="missing-tool"
+            initial={{ opacity: 0, y: -16 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}>
+            <AlertTriangle size={20} strokeWidth={2.6} />
+            <span>Next step needs the {missingToolName} — go back to the Cabinet and take it.</span>
           </motion.div>
         )}
       </AnimatePresence>
@@ -522,7 +576,7 @@ export default function StoveView({ onClose, onFinishCooking, selectedRecipe }: 
                   key={currentStepImage || cookware.img}
                   src={currentStepImage || cookware.img}
                   alt={cookware.name}
-                  className={`gst-pot-img ${currentStepImage ? 'gst-pot-img--step' : ''} ${isPakbet && currentStepImage ? 'gst-pot-img--pakbet-cooking' : ''} ${isCaldereta && currentStepImage ? 'gst-pot-img--caldereta-cooking' : ''}`.trim()}
+                  className={`gst-pot-img ${currentStepImage ? 'gst-pot-img--step' : ''} ${isPakbet && currentStepImage ? 'gst-pot-img--pakbet-cooking' : ''} ${isCaldereta && currentStepImage ? 'gst-pot-img--caldereta-cooking' : ''} ${charredDish ? 'gst-pot-img--charred' : ''}`.trim()}
                   initial={{ opacity: 0.7 }}
                   animate={{ opacity: 1 }}
                   exit={{ opacity: 0.7 }}
@@ -648,7 +702,7 @@ export default function StoveView({ onClose, onFinishCooking, selectedRecipe }: 
               onClick={handleServe}
               whileTap={{ scale: 0.95 }}>
               <CheckCircle2 size={18} />
-              {state === 'burnt' ? 'Serve anyway…' : '🍽 Serve!'}
+              {state === 'burnt' ? 'Serve anyway…' : 'Serve'}
             </motion.button>
           </motion.div>
         )}

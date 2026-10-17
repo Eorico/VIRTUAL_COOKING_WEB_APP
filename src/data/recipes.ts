@@ -1,5 +1,4 @@
-import type { Recipe, Level } from '../types'
-
+import type { Recipe, Level } from '../constant/interface'
 export const recipes: Recipe[] = [
   {
     "id": 1,

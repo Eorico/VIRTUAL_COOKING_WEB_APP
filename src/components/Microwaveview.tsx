@@ -2,14 +2,7 @@ import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { X, Play, Square, ThermometerSun, Power, CheckCircle2 } from 'lucide-react'
 import useGameStore from '../store/gameStore'
-import type { Recipe } from '../types'
-
-interface Props {
-  onClose: () => void
-  onFinishCooking: () => void
-  selectedRecipe: Recipe | null
-}
-
+import type { MicrowaveViewProps } from '../constant/interface'
 const MICROWAVE_STEPS = [
   { img: '/assets/COOKING PART/17-king-ranch-chicken/8-preheat-the-oven.png', text: 'Preheat the oven to 350°F (175°C)', title: 'PREHEAT' },
   { img: '/assets/COOKING PART/17-king-ranch-chicken/10-open-the-oven.png', text: 'Open the oven door', title: 'OPEN OVEN' },
@@ -21,7 +14,7 @@ const MICROWAVE_STEPS = [
   { img: '/assets/COOKING PART/17-king-ranch-chicken/17-cutted-into-portion.png', text: 'Cut into portions', title: 'PORTION' },
 ]
 
-export default function MicrowaveView({ onClose, onFinishCooking, selectedRecipe }: Props) {
+export default function MicrowaveView({ onClose, onFinishCooking, selectedRecipe }: MicrowaveViewProps) {
   const [stepIndex, setStepIndex] = useState(0)
   const [isRunning, setIsRunning] = useState(false)
   const [timeRemaining, setTimeRemaining] = useState(30)

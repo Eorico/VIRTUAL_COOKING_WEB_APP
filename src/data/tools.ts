@@ -1,5 +1,4 @@
-import type { ToolCategory, ToolType } from '../types'
-
+import type { ToolCategory } from '../constant/interface'
 // ─── All tools with canCut + technique flags ───────────────────
 export const toolCategories: ToolCategory[] = [
   {

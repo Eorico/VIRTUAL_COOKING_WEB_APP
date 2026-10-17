@@ -1,17 +1,21 @@
 import { useState } from 'react'
-import { ChevronLeft, ChevronRight, Lock, CheckCircle2, Star, Clock, AlertCircle, ChefHat } from 'lucide-react'
+import { ChevronLeft, ChevronRight, Lock, CheckCircle2, Star, Clock, AlertCircle } from 'lucide-react'
 import { motion } from 'framer-motion'
 import { levels, recipes, getCategoriesInLevel } from '../data/recipes'
 import useGameStore from '../store/gameStore'
-import type { SetScreenProps, Level, Recipe } from '../types'
-
-const catIcons = [ChefHat, Star, Clock, CheckCircle2]
+import { useCarouselSlide } from '../hooks/useCarouselSlide'
+import ChefMascot from '../components/ui/ChefMascot'
+import GameIcon from '../components/ui/GameIcon'
+import type { SetScreenProps, Level, Recipe } from '../constant/interface'
+const catIcons = [null, Star, Clock, CheckCircle2]
 
 export default function LevelSelection({ setScreen }: SetScreenProps) {
   const { setSelectedRecipe, resetGame, unlockedLevels, unlockedRecipes, recipeMastery, levelProgress } = useGameStore()
   const [activeLevel, setActiveLevel]       = useState<Level | null>(null)
   const [activeCategory, setActiveCategory] = useState<string | null>(null)
   const [levelIndex, setLevelIndex]         = useState(0)
+  // Must match the card max-width in app.css (.ls-carousel-card).
+  const lvls = useCarouselSlide(940, 0.8)
 
   const isLocked   = (id: number) => id !== 1 && !unlockedLevels.includes(id)
   const isUnlocked = (id: number) => unlockedRecipes.includes(id)
@@ -34,15 +38,16 @@ export default function LevelSelection({ setScreen }: SetScreenProps) {
   /* ── Level carousel ── */
   if (!activeLevel) return (
     <div className="g-page">
+      <ChefMascot size={124} corner="bottom-left" />
       <div className="g-navbar">
         <button className="g-back-btn" onClick={() => setScreen('kitchen-tools')}>
           <ChevronLeft size={20} strokeWidth={2.5} /><span>Back</span>
         </button>
         <span className="g-navbar-title">Levels</span>
       </div>
-      <div className="g-page-body g-page-body--no-sheet">
+      <div className="g-page-body g-page-body--no-sheet g-page-body--wide">
         <h1 className="ls-page-title">Select Level</h1>
-        <p className="ls-page-sub">Complete all recipes in a level to unlock the next one.</p>
+        <p className="ls-page-sub">Clear a level's dishes to open the next one.</p>
 
         <div className="kt-carousel">
           <button
@@ -53,7 +58,7 @@ export default function LevelSelection({ setScreen }: SetScreenProps) {
             <ChevronLeft size={34} strokeWidth={2.5} />
           </button>
 
-          <div className="ls-carousel-viewport">
+          <div className="ls-carousel-viewport" ref={lvls.ref}>
             {levels.map((lv, i) => {
               const locked    = isLocked(lv.id)
               const completed = levelProgress[lv.id]?.completed ?? false
@@ -65,7 +70,7 @@ export default function LevelSelection({ setScreen }: SetScreenProps) {
                   className={`ls-card ls-carousel-card ${locked ? 'locked' : ''} ${completed ? 'completed' : ''} ${offset === 0 ? 'ls-carousel-card--active' : 'ls-carousel-card--peek'}`}
                   onClick={() => offset === 0 ? (!locked && setActiveLevel(lv)) : setLevelIndex(i)}
                   animate={{
-                    x: offset * 640,
+                    x: offset * lvls.slide,
                     scale: offset === 0 ? 1 : 0.8,
                     opacity: offset === 0 ? 1 : 0.4,
                     zIndex: offset === 0 ? 10 : 1,
@@ -124,13 +129,14 @@ export default function LevelSelection({ setScreen }: SetScreenProps) {
   const cats = getCategoriesInLevel(activeLevel.id)
   if (cats.length > 1 && !activeCategory) return (
     <div className="g-page">
+      <ChefMascot size={124} corner="bottom-left" />
       <div className="g-navbar">
         <button className="g-back-btn" onClick={() => setActiveLevel(null)}>
           <ChevronLeft size={20} strokeWidth={2.5} /><span>Back</span>
         </button>
         <span className="g-navbar-title">{activeLevel.title}</span>
       </div>
-      <div className="g-page-body">
+      <div className="g-page-body g-page-body--wide">
         <div className="ls-cats-header">
           <h1 className="ls-page-title">{activeLevel.title}</h1>
           <p className="ls-page-sub" style={{ marginBottom: 0 }}>Choose a category to begin</p>
@@ -151,7 +157,7 @@ export default function LevelSelection({ setScreen }: SetScreenProps) {
                 onClick={() => setActiveCategory(cat)}
                 initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: i * 0.06 }} whileTap={{ scale: 0.99 }}>
-                <div className="ls-cat-icon"><CatIcon size={26} strokeWidth={1.8} /></div>
+                <div className="ls-cat-icon">{CatIcon ? <CatIcon size={26} strokeWidth={1.8} /> : <GameIcon name="chefHat" size={30} />}</div>
                 <div className="ls-cat-body">
                   <div className="ls-cat-name">
                     {cat}
@@ -178,13 +184,14 @@ export default function LevelSelection({ setScreen }: SetScreenProps) {
 
   return (
     <div className="g-page">
+      <ChefMascot size={124} corner="bottom-left" />
       <div className="g-navbar">
         <button className="g-back-btn" onClick={() => activeCategory ? setActiveCategory(null) : setActiveLevel(null)}>
           <ChevronLeft size={20} strokeWidth={2.5} /><span>Back</span>
         </button>
         <span className="g-navbar-title">{activeCategory ?? activeLevel.title}</span>
       </div>
-      <div className="g-page-body">
+      <div className="g-page-body g-page-body--wide">
         <h1 className="ls-page-title">{activeCategory ?? activeLevel.title}</h1>
         <div className="ls-notice">
           <AlertCircle size={18} />{activeLevel.requirement}
