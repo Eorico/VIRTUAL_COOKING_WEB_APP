@@ -22,6 +22,7 @@ export const GAME_ICONS = {
   prep: '/assets/icons/chopping-board.png',
   sink: '/assets/icons/sink.png',
   stove: '/assets/icons/stove.png',
+  oven: '/assets/icons/oven.png',
 
   // Brand
   chefHat: '/assets/icons/chef-hat.png',

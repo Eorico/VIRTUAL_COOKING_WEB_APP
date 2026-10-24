@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { X, Play, Square, ThermometerSun, Power, CheckCircle2 } from 'lucide-react'
 import useGameStore from '../store/gameStore'
 import type { MicrowaveViewProps } from '../constant/interface'
-const MICROWAVE_STEPS = [
+const OVEN_STEPS = [
   { img: '/assets/COOKING PART/17-king-ranch-chicken/8-preheat-the-oven.png', text: 'Preheat the oven to 350°F (175°C)', title: 'PREHEAT' },
   { img: '/assets/COOKING PART/17-king-ranch-chicken/10-open-the-oven.png', text: 'Open the oven door', title: 'OPEN OVEN' },
   { img: '/assets/COOKING PART/17-king-ranch-chicken/12-bake-for-30-50-mins.png', text: 'Place the baking dish inside and set timer for 30-35 mins', title: 'BAKE' },
@@ -49,7 +49,7 @@ export default function MicrowaveView({ onClose, onFinishCooking, selectedRecipe
       return
     }
     
-    if (stepIndex < MICROWAVE_STEPS.length - 1) {
+    if (stepIndex < OVEN_STEPS.length - 1) {
       setStepIndex(s => s + 1)
       if (stepIndex + 1 === 2) {
         setTimeRemaining(30)
@@ -70,8 +70,8 @@ export default function MicrowaveView({ onClose, onFinishCooking, selectedRecipe
     return `${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`
   }
 
-  const currentImg = served ? '/assets/COOKING PART/17-king-ranch-chicken/serve.png' : MICROWAVE_STEPS[stepIndex].img
-  const currentStepInfo = MICROWAVE_STEPS[stepIndex]
+  const currentImg = served ? '/assets/COOKING PART/17-king-ranch-chicken/serve.png' : OVEN_STEPS[stepIndex].img
+  const currentStepInfo = OVEN_STEPS[stepIndex]
 
   return (
     <div className="ek-microwave-view">
@@ -83,13 +83,13 @@ export default function MicrowaveView({ onClose, onFinishCooking, selectedRecipe
           <X size={20} strokeWidth={2.5} /><span>Close Station</span>
         </button>
         <div style={{ display: 'flex', alignItems: 'center' }}>
-          <span className="g-navbar-title" style={{ color: '#fff' }}>Oven & Microwave</span>
+          <span className="g-navbar-title" style={{ color: '#fff' }}>Oven</span>
           <span className="ek-microwave-subtitle">| King Ranch Chicken</span>
         </div>
       </div>
 
       <div className="ek-microwave-stage">
-        {/* Left: The Microwave / Oven Unit */}
+        {/* Left: the oven */}
         <div className="ek-microwave-chamber">
           <div className="ek-microwave-frame">
             <div className={`ek-microwave-window ${isRunning ? 'is-running' : ''}`}>
@@ -108,7 +108,7 @@ export default function MicrowaveView({ onClose, onFinishCooking, selectedRecipe
             </div>
             
             <div className="ek-microwave-caption">
-              <div className="ek-microwave-step-num">Step {stepIndex + 1} of {MICROWAVE_STEPS.length}</div>
+              <div className="ek-microwave-step-num">Step {stepIndex + 1} of {OVEN_STEPS.length}</div>
               <h3 className="ek-microwave-step-title">{currentStepInfo.title}</h3>
               <p className="ek-microwave-step-desc">{currentStepInfo.text}</p>
             </div>
@@ -154,7 +154,7 @@ export default function MicrowaveView({ onClose, onFinishCooking, selectedRecipe
                   onClick={handleNextStep}
                   disabled={isRunning}
                   style={{ width: '100%' }}>
-                  {stepIndex < MICROWAVE_STEPS.length - 1 ? 'Next Step  →' : 'Finish Baking'}
+                  {stepIndex < OVEN_STEPS.length - 1 ? 'Next Step  →' : 'Finish Baking'}
                 </button>
               ) : (
                 <button 
@@ -167,7 +167,7 @@ export default function MicrowaveView({ onClose, onFinishCooking, selectedRecipe
             </div>
             
             <div className="ek-microwave-dots">
-              {MICROWAVE_STEPS.map((_, i) => (
+              {OVEN_STEPS.map((_, i) => (
                 <div key={i} className={`ek-dot ${i === stepIndex ? 'active' : ''} ${i < stepIndex ? 'done' : ''}`} />
               ))}
             </div>

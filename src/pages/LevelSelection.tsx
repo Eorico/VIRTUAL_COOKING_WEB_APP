@@ -1,5 +1,6 @@
 import { useState } from 'react'
-import { ChevronLeft, ChevronRight, Lock, CheckCircle2, Star, Clock, AlertCircle } from 'lucide-react'
+import { ChevronLeft, ChevronRight, Lock, CheckCircle2, Star, Clock, AlertCircle,
+  Soup, CookingPot, Utensils, Flame, Trophy } from 'lucide-react'
 import { motion } from 'framer-motion'
 import { levels, recipes, getCategoriesInLevel } from '../data/recipes'
 import useGameStore from '../store/gameStore'
@@ -7,7 +8,20 @@ import { useCarouselSlide } from '../hooks/useCarouselSlide'
 import ChefMascot from '../components/ui/ChefMascot'
 import GameIcon from '../components/ui/GameIcon'
 import type { SetScreenProps, Level, Recipe } from '../constant/interface'
-const catIcons = [null, Star, Clock, CheckCircle2]
+/**
+ * Category icons were picked by list position, so whichever category happened
+ * to come first got a chef hat and the next a star — nothing to do with what
+ * the category actually is. They are keyed by name now: a saucepan for sauces,
+ * a bowl of soup for soups, and so on.
+ */
+const CATEGORY_ICONS: Record<string, typeof Soup> = {
+  'Sauce': CookingPot,
+  'Mother Soup': Soup,
+  'Filipino Basic': Utensils,
+  'Intermediate': Flame,
+  'Advanced': Trophy,
+}
+const DEFAULT_CAT_ICON = Utensils
 
 export default function LevelSelection({ setScreen }: SetScreenProps) {
   const { setSelectedRecipe, resetGame, unlockedLevels, unlockedRecipes, recipeMastery, levelProgress } = useGameStore()
@@ -150,14 +164,14 @@ export default function LevelSelection({ setScreen }: SetScreenProps) {
             const ids  = recipes.filter(r => r.level === activeLevel.id && r.category === cat).map(r => r.id)
             const done = ids.filter(isDone).length
             const isComplete = done === ids.length
-            const CatIcon = catIcons[i % catIcons.length]
+            const CatIcon = CATEGORY_ICONS[cat] ?? DEFAULT_CAT_ICON
             return (
               <motion.div key={cat}
                 className={`ls-cat-card ${isComplete ? 'done' : ''}`}
                 onClick={() => setActiveCategory(cat)}
                 initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: i * 0.06 }} whileTap={{ scale: 0.99 }}>
-                <div className="ls-cat-icon">{CatIcon ? <CatIcon size={26} strokeWidth={1.8} /> : <GameIcon name="chefHat" size={30} />}</div>
+                <div className="ls-cat-icon"><CatIcon size={28} strokeWidth={1.9} /></div>
                 <div className="ls-cat-body">
                   <div className="ls-cat-name">
                     {cat}

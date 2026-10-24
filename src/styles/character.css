@@ -1209,3 +1209,79 @@
 .rcs-panel {
   text-align: left;
 }
+
+/* ══════════════════════════════════════════════════════════════════════════
+   WARNINGS — bigger and harder to miss (Comment 2.1, general #1)
+   The shared toast pill is deliberately quiet, which suits tips and progress
+   notices but made genuine warnings too easy to scroll past. Anything that
+   warns now gets a larger type size, a thicker accent, and a coloured wash,
+   while keeping the same shape and position as every other message.
+   ══════════════════════════════════════════════════════════════════════════ */
+.ek-toast--warning,
+.ek-toast--error,
+.prep-unsafe-banner,
+.gst-burn-warning {
+  padding: 13px 24px;
+  font-size: 17px;
+  font-weight: 800;
+  letter-spacing: .2px;
+  color: #fff6e6;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, .55);
+}
+
+/* The accent bar grows with the type so it still reads as a bar, not a hair. */
+.ek-toast--warning::before,
+.ek-toast--error::before,
+.prep-unsafe-banner::before,
+.gst-burn-warning::before {
+  width: 5px;
+  border-radius: 3px;
+}
+
+.ek-toast--warning,
+.prep-unsafe-banner,
+.gst-burn-warning--soon {
+  background: linear-gradient(180deg, rgba(74, 44, 2, .96), rgba(32, 18, 1, .96));
+  box-shadow: 0 12px 30px rgba(0, 0, 0, .55), inset 0 0 0 1.5px rgba(245, 166, 35, .5);
+}
+
+.ek-toast--error,
+.gst-burn-warning--burnt {
+  background: linear-gradient(180deg, rgba(86, 20, 14, .96), rgba(38, 9, 6, .96));
+  box-shadow: 0 12px 30px rgba(0, 0, 0, .55), inset 0 0 0 1.5px rgba(255, 90, 70, .55);
+}
+
+.gst-burn-warning svg,
+.prep-unsafe-banner svg,
+.ek-toast--warning svg,
+.ek-toast--error svg {
+  width: 21px;
+  height: 21px;
+}
+
+/* A burnt dish is the loudest thing the game says — let it pulse. */
+.gst-burn-warning--burnt {
+  animation: warn-pulse 1s ease-in-out infinite;
+}
+
+@keyframes warn-pulse {
+  0%, 100% { box-shadow: 0 12px 30px rgba(0, 0, 0, .55), inset 0 0 0 1.5px rgba(255, 90, 70, .55); }
+  50%      { box-shadow: 0 12px 34px rgba(120, 20, 10, .6), inset 0 0 0 2.5px rgba(255, 120, 95, .9); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .gst-burn-warning--burnt { animation: none; }
+}
+
+/* Inline warning copy elsewhere in the game (level notices, unsafe-cut
+   callouts) gets the same lift so nothing is left whispering. */
+.ls-notice,
+.sop-stabilize-prompt {
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.ls-notice svg {
+  width: 22px;
+  height: 22px;
+}
