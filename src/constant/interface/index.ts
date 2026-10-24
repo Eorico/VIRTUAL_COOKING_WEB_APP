@@ -122,11 +122,25 @@ export interface AudioSettings { musicEnabled: boolean; sfxEnabled: boolean; mas
 // ═══════════════════════════════════════════════════════════════
 export interface CookingStep { id: number; name: string; status: 'pending' | 'in-progress' | 'completed' }
 
-/** One recipe's pot artwork: the per-step frames plus the two end states. */
+/**
+ * One recipe's pot artwork.
+ *
+ * Cooking has four end states, not two, and they are reached in two stages:
+ * the dish finishes (or ruins itself) *in the pan*, and only reaches a bowl
+ * when the player presses Serve. The old single `burnt` field collapsed those,
+ * which is why some dishes appeared burnt already plated — the supplied image
+ * for that field was the bowl shot.
+ */
 export interface CookingStepImageSet {
   steps: string[]
+  /** Correctly cooked, still in the pan — shown when the timer completes. */
   done?: string
-  burnt?: string
+  /** Ruined, still in the pan — shown when the heat was left on too long. */
+  burntPan?: string
+  /** Plated and correct — shown only after Serve. */
+  servedGood?: string
+  /** Plated and ruined — shown only after Serve. */
+  servedBurnt?: string
 }
 
 // ═══════════════════════════════════════════════════════════════

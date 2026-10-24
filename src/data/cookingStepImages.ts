@@ -1,23 +1,31 @@
 
 import type { CookingStepImageSet } from '../constant/interface'
 /**
- * Picture to show for an overcooked dish.
+ * Pictures to show once cooking ends.
  *
- * Only about half the recipes ship a dedicated burnt frame. Callers used to do
- * `if (set.burnt) setImage(set.burnt)`, so for every other recipe an overcooked
- * dish silently kept the appetising "done" picture and the player saw a perfect
- * result after burning the food. Here a missing asset instead returns the final
- * frame together with `charred: true`, and the caller applies the charred CSS
- * treatment so a burnt cook never looks like a successful one.
+ * `pan` is what sits on the burner the moment the dish finishes or ruins
+ * itself; `served` is what reaches the bowl when the player presses Serve.
+ * Recipes that ship no dedicated burnt art fall back to the final frame with
+ * `charred: true`, and the caller tints it — a ruined dish must never read as
+ * a good one.
  */
-export function resolveBurntImage(
-  recipeId: number,
-  fallback?: string | null,
-): { src: string | null; charred: boolean } {
+export function resolveOutcomeImages(recipeId: number, burned: boolean): {
+  pan: string | null
+  served: string | null
+  charred: boolean
+} {
   const set = COOKING_STEP_IMAGES[recipeId]
-  if (set?.burnt) return { src: set.burnt, charred: false }
   const lastStep = set?.steps?.length ? set.steps[set.steps.length - 1] : null
-  return { src: set?.done ?? lastStep ?? fallback ?? null, charred: true }
+
+  if (!burned) {
+    return { pan: set?.done ?? lastStep ?? null, served: set?.servedGood ?? set?.done ?? null, charred: false }
+  }
+  const pan = set?.burntPan ?? null
+  const served = set?.servedBurnt ?? pan
+  if (pan || served) return { pan: pan ?? served, served: served ?? pan, charred: false }
+  // Nothing burnt supplied — reuse the good frames and let CSS char them.
+  const fallback = set?.done ?? lastStep ?? null
+  return { pan: fallback, served: set?.servedGood ?? fallback, charred: true }
 }
 
 export const COOKING_STEP_IMAGES: Record<number, CookingStepImageSet> = {
@@ -34,7 +42,7 @@ export const COOKING_STEP_IMAGES: Record<number, CookingStepImageSet> = {
       '/assets/COOKING PART/1-bechamel/bechamel/9-stir-the-sauce-gently.png'
     ],
     done: '/assets/COOKING PART/1-bechamel/bechamel/10-serve.png',
-    burnt: '/assets/COOKING PART/1-bechamel/bechamel/burn-version.png'
+    burntPan: '/assets/COOKING PART/1-bechamel/bechamel/burn-version.png'
   },
   2: {
     steps: [
@@ -50,8 +58,12 @@ export const COOKING_STEP_IMAGES: Record<number, CookingStepImageSet> = {
       '/assets/COOKING PART/2-espagnole/10-simmer.png',
       '/assets/COOKING PART/2-espagnole/11-strain-the-sauce.png'
     ],
-    done: '/assets/COOKING PART/2-espagnole/serve-good.png',
-    burnt: '/assets/COOKING PART/2-espagnole/serve-burnt.png'
+    // Finishing and ruining both happen in the pan; the bowl shots are
+    // held back until Serve (Revised Feedback C4).
+    done: '/assets/COOKING PART/2-espagnole/11-strain-the-sauce.png',
+    burntPan: '/assets/COOKING PART/2-espagnole/12-burnt-while-cooking.png',
+    servedGood: '/assets/COOKING PART/2-espagnole/serve-good.png',
+    servedBurnt: '/assets/COOKING PART/2-espagnole/serve-burnt.png'
   },
   3: {
     steps: [
@@ -64,7 +76,9 @@ export const COOKING_STEP_IMAGES: Record<number, CookingStepImageSet> = {
       '/assets/COOKING PART/3-tomato-sauce/7-cook-the-sauce.png'
     ],
     done: '/assets/COOKING PART/3-tomato-sauce/8-good.png',
-    burnt: '/assets/COOKING PART/3-tomato-sauce/9-burnt.png'
+    burntPan: '/assets/COOKING PART/3-tomato-sauce/8-cooking-burnt.png',
+    servedGood: '/assets/COOKING PART/3-tomato-sauce/8-serve-good.png',
+    servedBurnt: '/assets/COOKING PART/3-tomato-sauce/9-serve-burnt.png'
   },
   4: {
     // Aligned to chronologicalSteps [Egg yolks, whisk, Butter, Lemon juice, Salt]:
@@ -90,7 +104,7 @@ export const COOKING_STEP_IMAGES: Record<number, CookingStepImageSet> = {
       '/assets/COOKING PART/6-chicken-noodle-soup/9-stir-in-the-egg-noodles.png'
     ],
     done: '/assets/COOKING PART/6-chicken-noodle-soup/7-ladle.png',
-    burnt: '/assets/COOKING PART/6-chicken-noodle-soup/10-overcooked.png'
+    burntPan: '/assets/COOKING PART/6-chicken-noodle-soup/10-overcooked.png'
   },
   // Butternut Squash Soup — assets live in the 8-butternut-squash-soup folder.
   // This was an empty set, so the pot never changed and no serve image ever showed.
@@ -127,7 +141,7 @@ export const COOKING_STEP_IMAGES: Record<number, CookingStepImageSet> = {
       '/assets/COOKING PART/7-corn-chowder-soup/Step 7 -Add Milk and season.png'
     ],
     done: '/assets/COOKING PART/7-corn-chowder-soup/Step 8 serve it_.png',
-    burnt: '/assets/COOKING PART/7-corn-chowder-soup/Burn pan version.png'
+    burntPan: '/assets/COOKING PART/7-corn-chowder-soup/Burn pan version.png'
   },
   9: {
     steps: [
@@ -141,7 +155,7 @@ export const COOKING_STEP_IMAGES: Record<number, CookingStepImageSet> = {
       '/assets/COOKING PART/9-adobo/11-pepper.png'
     ],
     done: '/assets/COOKING PART/9-adobo/good.png',
-    burnt: '/assets/COOKING PART/9-adobo/burnt.png'
+    burntPan: '/assets/COOKING PART/9-adobo/burnt.png'
   },
   10: {
     steps: [
@@ -216,7 +230,7 @@ export const COOKING_STEP_IMAGES: Record<number, CookingStepImageSet> = {
       '/assets/COOKING PART/12-kare-kare/Step 7_ Season and finish_.png'
     ],
     done: '/assets/COOKING PART/12-kare-kare/Step 8 serve it_.png',
-    burnt: '/assets/COOKING PART/12-kare-kare/burn pan version.png'
+    burntPan: '/assets/COOKING PART/12-kare-kare/burn pan version.png'
   },
   16: {
     steps: [
@@ -249,7 +263,7 @@ export const COOKING_STEP_IMAGES: Record<number, CookingStepImageSet> = {
       '/assets/COOKING PART/19-pork-afritada/14. add black pepper_.png'
     ],
     done: '/assets/COOKING PART/19-pork-afritada/15. Good Cooking_.png',
-    burnt: '/assets/COOKING PART/19-pork-afritada/16. Burnt cooking_.png'
+    burntPan: '/assets/COOKING PART/19-pork-afritada/16. Burnt cooking_.png'
   },
   18: {
     steps: [
@@ -269,7 +283,7 @@ export const COOKING_STEP_IMAGES: Record<number, CookingStepImageSet> = {
       '/assets/COOKING PART/18-beef-morcon/beef-morcon/13-add-beef-broth.png'
     ],
     done: '/assets/COOKING PART/18-beef-morcon/beef-morcon/16-serve.png',
-    burnt: '/assets/COOKING PART/18-beef-morcon/beef-morcon/burn-version.png'
+    burntPan: '/assets/COOKING PART/18-beef-morcon/beef-morcon/burn-version.png'
   },
   // King Ranch Chicken — stove-top portion; the bake happens in MicrowaveView.
   // Previously empty, so neither the pot progression nor a serve/burnt image showed.
@@ -284,6 +298,6 @@ export const COOKING_STEP_IMAGES: Record<number, CookingStepImageSet> = {
       '/assets/COOKING PART/17-king-ranch-chicken/7-repeat-the-layers.png'
     ],
     done: '/assets/COOKING PART/17-king-ranch-chicken/serve.png',
-    burnt: '/assets/COOKING PART/17-king-ranch-chicken/serve-burn-version.png'
+    burntPan: '/assets/COOKING PART/17-king-ranch-chicken/serve-burn-version.png'
   },
 }

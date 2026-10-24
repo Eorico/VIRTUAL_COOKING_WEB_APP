@@ -75,7 +75,7 @@ export const recipes: Recipe[] = [
     "name": "Espagnole Sauce",
     "level": 1,
     "category": "Sauce",
-    "image": "/assets/levels/level1/Sauces/Espagnole/espagnole.png",
+    "image": "/assets/levels/level1/Sauces/Espagnole/espagnole-served.png",
     "minScore": 70,
     "cookingDuration": 90,
     "ingredients": [
@@ -122,7 +122,7 @@ export const recipes: Recipe[] = [
       "cboard"
     ],
     "steps": [
-      "Prepare mirepoix (diced carrots, onions, celery)",
+      "Prepare mirepoix (diced carrots and onions, minced celery)",
       "Melt butter and make brown roux with flour",
       "Add beef stock gradually while whisking",
       "Add mirepoix, tomato puree, and herbs",
@@ -153,7 +153,7 @@ export const recipes: Recipe[] = [
       "¼ cup tomato paste",
       "¼ cup diced carrots",
       "¼ cup diced onions",
-      "¼ cup diced celery"
+      "¼ cup minced celery"
     ],
     "narrativeTools": [
       "Saucepan",
@@ -239,7 +239,7 @@ export const recipes: Recipe[] = [
     },
     "narrativeIngredients": [
       "2 tbsp olive oil",
-      "1 onion, chopped",
+      "1 onion, diced",
       "2 cloves garlic, minced",
       "4 cups crushed tomatoes",
       "1 tsp salt",
@@ -253,7 +253,7 @@ export const recipes: Recipe[] = [
       "Measuring spoons"
     ],
     "narrativeSteps": [
-      "Prepare the ingredients. Wash and chop the onion and mince the garlic.",
+      "Prepare the ingredients. Wash and dice the onion and mince the garlic.",
       "Sauté the aromatics. Heat olive oil in a saucepan and cook the onion until soft. Add the garlic and stir for one minute.",
       "Add the tomatoes. Pour the crushed tomatoes into the saucepan and stir well.",
       "Season the sauce. Add salt and pepper and mix thoroughly.",
@@ -376,9 +376,9 @@ export const recipes: Recipe[] = [
     ],
     "cutInstructions": {
       "Carrot": {
-        "technique": "slice",
+        "technique": "dice",
         "size": "standard",
-        "description": "slice cut"
+        "description": "dice cut"
       },
       "Celery": {
         "technique": "straight cut",
@@ -400,8 +400,8 @@ export const recipes: Recipe[] = [
       "500 g chicken breast or chicken thighs",
       "6 cups chicken broth",
       "1 cup egg noodles",
-      "1 carrot, sliced",
-      "1 celery stalk, chopped",
+      "1 carrot, diced",
+      "1 celery stalk, straight cut",
       "1 onion, diced",
       "2 cloves garlic, minced",
       "Salt to taste",
@@ -418,7 +418,7 @@ export const recipes: Recipe[] = [
       "Ladle"
     ],
     "narrativeSteps": [
-      "Prepare the ingredients. Wash the vegetables thoroughly. Using a cutting board and knife, dice the onion, chop the celery, slice the carrot, and mince the garlic. Cut the chicken into bite-sized pieces.",
+      "Prepare the ingredients. Wash the vegetables thoroughly. Using a cutting board and knife, dice the onion, straight cut the celery, dice the carrot, and mince the garlic. Cut the chicken into bite-sized pieces.",
       "Sauté the vegetables. Place a large soup pot over medium heat. Add cooking oil and sauté the onion, celery, and garlic using a wooden spoon until fragrant and translucent.",
       "Cook the chicken. Add the chicken pieces to the pot and cook until lightly browned.",
       "Add the broth. Pour the chicken broth into the pot. Stir well and bring the mixture to a boil.",
@@ -499,7 +499,7 @@ export const recipes: Recipe[] = [
     },
     "narrativeIngredients": [
       "1 medium butternut squash, peeled and cubed",
-      "1 onion, chopped",
+      "1 onion, diced",
       "2 cloves garlic, minced",
       "4 cups vegetable broth",
       "1 tbsp butter",
@@ -518,7 +518,7 @@ export const recipes: Recipe[] = [
     ],
     "narrativeSteps": [
       "Prepare the squash. Peel the butternut squash using a vegetable peeler. Cut it in half, remove the seeds, and cube the flesh.",
-      "Sauté aromatics. Melt butter in a large pot over medium heat. Add chopped onions and garlic, stirring until softened.",
+      "Sauté aromatics. Melt butter in a large pot over medium heat. Add diced onions and minced garlic, stirring until softened.",
       "Cook the squash. Add the cubed squash to the pot and stir for several minutes.",
       "Add broth. Pour in the vegetable broth and bring the mixture to a boil.",
       "Simmer until tender. Lower the heat and cook for 20–25 minutes until the squash becomes very soft.",

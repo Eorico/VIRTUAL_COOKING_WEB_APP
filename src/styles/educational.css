@@ -3868,8 +3868,12 @@
   top: 44%;        /* ← adjust height    */
   width: 300px;    /* ← image size       */
 }
+/* No grayscale/brightness here: recipes that ship a real burnt image are
+   already burnt, and darkening them turned the supplied artwork into grey
+   mush (Revised Feedback B2). Only the CSS-charred fallback is tinted —
+   see .gst-pot-img--charred. */
 .gst-pot--served-burnt .gst-pot-img {
-  filter: grayscale(.7) brightness(.55) drop-shadow(0 6px 18px rgba(0, 0, 0, .8));
+  filter: drop-shadow(0 6px 18px rgba(0, 0, 0, .8));
 }
 
 /* ── WAITING ON STOVE (Before Serve is clicked) ─────────────── */
@@ -3880,7 +3884,7 @@
 
 .gst-pot--burnt .gst-pot-img,
 .gst-pot--served-burnt .gst-pot-img {
-  filter: grayscale(.7) brightness(.55) drop-shadow(0 6px 18px rgba(0, 0, 0, .8));
+  filter: drop-shadow(0 6px 18px rgba(0, 0, 0, .8));
 }
 
 /* Recipes with no burnt artwork reuse their final frame, so the charring has to

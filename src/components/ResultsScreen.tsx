@@ -3,7 +3,7 @@ import { motion } from 'framer-motion'
 import { ChevronLeft, CheckCircle2, AlertCircle, XCircle, Unlock, Trophy, Shield } from 'lucide-react'
 import useGameStore from '../store/gameStore'
 import { recipes } from '../data/recipes'
-import { COOKING_STEP_IMAGES, resolveBurntImage } from '../data/cookingStepImages'
+import { COOKING_STEP_IMAGES, resolveOutcomeImages } from '../data/cookingStepImages'
 import type { SetScreenProps } from '../constant/interface'
 export default function ResultsScreen({ setScreen }: SetScreenProps) {
   const { selectedRecipe, calculateScores, saveRecipeProgress,
@@ -39,9 +39,9 @@ export default function ResultsScreen({ setScreen }: SetScreenProps) {
   // the recipe's burnt frame, or the final frame charred in CSS when the recipe
   // ships no burnt asset.
   const burntOutcome = selectedRecipe && burnedFood
-    ? resolveBurntImage(selectedRecipe.id, selectedRecipe.image)
+    ? resolveOutcomeImages(selectedRecipe.id, true)
     : null
-  const dishImage = burntOutcome?.src ?? selectedRecipe?.image
+  const dishImage = burntOutcome?.served ?? selectedRecipe?.image
 
   const newRecipes = saved
     ? recipes.filter(r => unlockedRecipes.includes(r.id) && !preRecipes.current.includes(r.id))

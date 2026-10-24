@@ -11,7 +11,7 @@ import { matchesIngredient } from '../data/ingredients'
 import { toolCategories } from '../data/tools'
 import { getSlicesForIngredient } from '../data/sliceimages'
 import { RECIPE_COOKWARE, getRandomTip } from '../data/sopData'
-import { COOKING_STEP_IMAGES, resolveBurntImage } from '../data/cookingStepImages'
+import { COOKING_STEP_IMAGES, resolveOutcomeImages } from '../data/cookingStepImages'
 import type { CookState, HeatLevel } from '../constant/types'
 import type { StoveViewProps } from '../constant/interface'
 import GameTray from './ui/GameTray'
@@ -172,7 +172,8 @@ export default function StoveView({ onClose, onFinishCooking, selectedRecipe }: 
   const stepClass = currentStepImage ? 'gst-pot--step-img' : ''
   // Recipes without a dedicated burnt asset reuse the final frame, so the picture
   // itself has to be charred in CSS — otherwise an overcooked dish looks perfect.
-  const charredDish = (state === 'burnt' || state === 'served-burnt') && !stepImageSet?.burnt
+  const charredDish = (state === 'burnt' || state === 'served-burnt')
+    && resolveOutcomeImages(selectedRecipe?.id ?? -1, true).charred
   const pakbetCookingClass = (isPakbet && currentStepImage && state !== 'served' && state !== 'served-burnt') ? 'gst-pot--pakbet-cooking' : ''
   const calderetaCookingClass = (isCaldereta && currentStepImage && state !== 'served' && state !== 'served-burnt') ? 'gst-pot--caldereta-cooking' : ''
 
@@ -371,13 +372,17 @@ export default function StoveView({ onClose, onFinishCooking, selectedRecipe }: 
       // An overcooked dish must never keep showing a good frame. Recipes with no
       // burnt asset fall back to the final frame plus the charred treatment
       // (see `charredDish`) instead of leaving the appetising picture up.
-      const burnt = resolveBurntImage(selectedRecipe?.id ?? -1, null)
-      if (burnt.src) setCurrentStepImage(burnt.src)
+      // Ruined while still on the burner — the plated shot is held back until
+      // the player presses Serve (Revised Feedback D3, C4).
+      const outcome = resolveOutcomeImages(selectedRecipe?.id ?? -1, true)
+      if (outcome.pan) setCurrentStepImage(outcome.pan)
     } else if (seconds >= COOK_SECONDS && state === 'cooking') {
       setState('done')
       // Comment 13: when cooking finishes, advance the image to the cooked/done frame
       // instead of leaving the last prep frame frozen on screen.
-      if (stepImageSet?.done) setCurrentStepImage(stepImageSet.done)
+      // Correctly cooked, still in the pan.
+      const cooked = resolveOutcomeImages(selectedRecipe?.id ?? -1, false)
+      if (cooked.pan) setCurrentStepImage(cooked.pan)
       // Fire is intentionally left ON — the dish will burn if not served in time.
     }
   }, [seconds, BURN_SECONDS, COOK_SECONDS, state, setBurnedFood, stepImageSet, selectedRecipe?.id])
@@ -411,11 +416,12 @@ export default function StoveView({ onClose, onFinishCooking, selectedRecipe }: 
     const isBurnt = state === 'burnt'
     // Show the appropriate done/burnt serving image
     if (isBurnt) {
-      const burnt = resolveBurntImage(selectedRecipe?.id ?? -1, null)
-      if (burnt.src) setCurrentStepImage(burnt.src)
+      const outcome = resolveOutcomeImages(selectedRecipe?.id ?? -1, true)
+      if (outcome.served) setCurrentStepImage(outcome.served)
       setState('served-burnt')
     } else {
-      if (stepImageSet?.done) setCurrentStepImage(stepImageSet.done)
+      const outcome = resolveOutcomeImages(selectedRecipe?.id ?? -1, false)
+      if (outcome.served) setCurrentStepImage(outcome.served)
       setState('served')
     }
     // After 1.5s of showing the serving image, proceed to finish.
